@@ -1,19 +1,22 @@
 {
-  "name": "backend",
-  "version": "1.0.0",
-  "description": "P7 : Création d'un réseau social pour l'entreprise Groupomania.",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "réseau",
-    "social",
-    "Groupomania",
-    "Projet",
-    "7",
-    "Node"
-  ],
-  "author": "Mathilde Descamps",
-  "license": "ISC"
+    "name": "backend",
+    "version": "1.0.0",
+    "description": "P7 : Création d'un réseau social pour l'entreprise Groupomania.",
+    "main": "server.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "réseau",
+        "social",
+        "Groupomania",
+        "Projet",
+        "7",
+        "Node"
+    ],
+    "author": "Mathilde Descamps",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.17.1"
+    }
 }
