@@ -8,6 +8,7 @@ const auth = require('../middlewares/auth');
 router.get('/', themeCtrl.getThemes);
 router.get('/:id', themeCtrl.getOneTheme);
 router.post('/', themeCtrl.createTheme);
-router.delete('/', themeCtrl.deleteTheme);
+router.put('/:id', themeCtrl.updateTheme);
+router.delete('/:id', themeCtrl.deleteTheme);
 
 module.exports = router;

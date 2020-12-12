@@ -29,23 +29,25 @@ exports.getOneTheme = (req, res, next) => {
         .catch(error => res.status(404).json({ error }));
 };
 
+// MODIFIER UN THEME : 
+exports.updateTheme = (req, res, next) => {
+    const themeObject = req.body.theme;
+    Theme.update(
+        { ...themeObject },
+        { where: { id: req.params.id } }
+    )
+    .then(() => res.status(200).json({ message: 'Thème modifié !' }))
+    .catch(error => res.status(400).json({ error }));
+};
+
+
 // SUPPRIMER UN THÈME :
 exports.deleteTheme = (req, res, next) => {
-    //On utilise l'ID reçu en paramètre pour trouver le thème correspondant dans la base de données.
-    Theme.findAll({
-            where: {
-                id: req.params.id
-            }
-        })
-        .then(theme => {
-            //La méthode destroy() supprime le theme unique, ayant le même id que le paramètre de la requête, dans la base de données. 
             Theme.destroy({
                     where: {
                         id: req.params.id
                     }
-                })
+            })
                 .then(() => res.status(200).json({ message: 'Thème supprimé !' }))
                 .catch(error => res.status(400).json({ error }));
-        })
-        .catch(error => res.status(500).json({ error }));
 };
