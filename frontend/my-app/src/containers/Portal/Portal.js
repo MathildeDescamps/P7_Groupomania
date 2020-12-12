@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import Form from '../../components/Form/Form';
+import LoginForm from '../../components/LoginForm/LoginForm';
 //import Button from '../../components/Button';
 
 const PortalWrapper = styled.div`
@@ -20,7 +20,7 @@ class Portal extends Component {
     render(){
         return(
             <PortalWrapper>
-                <Form />
+                <LoginForm />
             </PortalWrapper>
         );
     }
