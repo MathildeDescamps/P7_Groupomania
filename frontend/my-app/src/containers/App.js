@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import Portal from '../containers/Portal/Portal';
+import LoginForm from '../components/LoginForm/LoginForm';
 import logo from '../portalLogo.png';
 
 const GlobalStyle = createGlobalStyle`
@@ -29,7 +29,7 @@ class App extends Component {
         <GlobalStyle/>
         <AppWrapper>
           <Logo src={ logo } alt='[ logo Postmania ]' />
-          <Portal />
+          <LoginForm />
         </AppWrapper>
       </>
     );
