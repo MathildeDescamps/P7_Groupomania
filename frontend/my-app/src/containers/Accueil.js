@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
-import AuthForm from '../components/AuthForm/AuthForm';
+import Header from '../components/Header/Header';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -9,25 +9,19 @@ const GlobalStyle = createGlobalStyle`
     sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background-color: #F6F6F5;
   }
 `;
 
-const AppWrapper = styled.div `
-  text-align: center;
-`;
-
-
-class App extends Component {
+class Accueil extends Component {
   render() {
     return (
       <>
         <GlobalStyle/>
-        <AppWrapper>
-          <AuthForm />
-        </AppWrapper>
+        <Header />
       </>
     );
   }
 }
 
-export default App;
+export default Accueil;

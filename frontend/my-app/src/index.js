@@ -1,15 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './containers/App';
+import Accueil from './containers/Accueil';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+if (window.location.pathname === '/') {
+  ReactDOM.render(
+    <App url='/' />,
+    document.getElementById('root')
+  );
+} else if (window.location.pathname === '/accueil') {
+  ReactDOM.render(
+    <Accueil url='/accueil' />,
+    document.getElementById('accueil')
+  );
+};
 
 
 serviceWorkerRegistration.register();
