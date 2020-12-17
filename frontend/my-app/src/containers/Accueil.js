@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import Header from '../components/Header/Header';
+import Footer from '../components/Footer/Footer';
+import PostContainer from '../components/PostContainer/PostContainer';
+
+
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -19,6 +23,8 @@ class Accueil extends Component {
       <>
         <GlobalStyle/>
         <Header />
+        <PostContainer />
+        <Footer />
       </>
     );
   }
