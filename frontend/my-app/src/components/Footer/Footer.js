@@ -13,6 +13,11 @@ const useStyles = makeStyles((theme) => ({
         justifyContent: 'center',
         position: 'fixed',
         bottom: '0',
+        color: 'white',
+    },
+    link: {
+        color: 'white',
+        padding: '1ch',
     },
 }));
 
@@ -23,7 +28,9 @@ const Footer = () => {
 
     return (
         <div id="footer-container" className={ classes.root } >
-            <Link className={classes.link} href="/mentions-legales" >mentions légales | </Link>© kira-factory 2020 | <Link className={classes.link} href="mailto:contact@postmania.com" > Nous contacter</Link>
+            <Link className={classes.link} href="/mentions-legales" >mentions légales</Link>
+            <p>| © kira-factory 2020 |</p>
+            <Link className={classes.link} href="mailto:contact@postmania.com" >Nous contacter</Link>
         </div>
     )
 };

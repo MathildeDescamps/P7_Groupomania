@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import App from '../../containers/App';
+import Accueil from '../../containers/Accueil';
 import clsx from 'clsx';
-import { Button, IconButton, Input, InputLabel, InputAdornment , Link, FormControl, FormControlLabel, FormHelperText, Checkbox } from '@material-ui/core/';
+import { Button, IconButton, Input, InputLabel, InputAdornment, Link, FormControl, FormControlLabel, FormHelperText, Checkbox } from '@material-ui/core/';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
@@ -93,7 +96,10 @@ const useStyles = makeStyles((theme) => ({
     },
     link: {
         color: '#D75030',
-        textDecoration: 'underlined',
+        textDecoration: 'none',
+        '&:hover': {
+            textDecoration: 'underline',
+        },
     },
 }));
 
@@ -111,6 +117,8 @@ const showLogin = () => {
 }
 
 const AuthForm = () => {
+
+        let history = useHistory();
 
         //On crée les constantes login, password, etc et on les initialise. Ce sont des strings vides au départ mais elles seront mises à jour avec setName().
         const [email, setEmail] = useState("");
@@ -138,6 +146,7 @@ const AuthForm = () => {
                 //On traite ici les erreurs éventuellement survenues
                 console.log(error);
             });
+            history.push('/accueil');
         };
         const handleSignupSubmit = (e) => {
             //On place ici la logique à appliquer lorsque le user clique sur 'S'inscrire'.
@@ -154,6 +163,7 @@ const AuthForm = () => {
                 //On traite ici les erreurs éventuellement survenues
                 console.log(error);
             });
+            history.push('/accueil');
         };
 
         const handleClickShowPassword = () => {
@@ -165,75 +175,75 @@ const AuthForm = () => {
         };
 
         return (
-            <div id="form-container">
-                <img src={ logo } alt='[ logo Postmania ]' className={classes.logo} id="logo" />
-                <form id="login-form" className={classes.loginRoot} noValidate autoComplete="off">
-                    <FormControl className={clsx(classes.margin, classes.formField)}>
-                        <InputLabel className={classes.label} htmlFor="standard-adornment-login">Email</InputLabel>
-                        <Input  className={classes.label} id="login-email-field" type="email" endAdornment={
-                            <InputAdornment position="end">
-                                <AccountCircle className={classes.icon} />
-                            </InputAdornment>
-                        } onChange={(e) => setEmail(e.target.value)}/>
-                    </FormControl>
-                    <FormControl className={clsx(classes.margin, classes.formField)}>
-                        <InputLabel className={classes.label} htmlFor="standard-adornment-password">Mot de passe</InputLabel>
-                        <Input className={classes.label} id="login-password-field" type={showPassword ? 'text' : 'password'} endAdornment={
-                            <InputAdornment position="end">
-                                <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
-                                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                                </IconButton>
-                            </InputAdornment>
-                        } onChange={(e) => setPassword(e.target.value)}/>
-                    </FormControl>
-                    <Button size="large" className={classes.loginButton} href="./accueil" onClick={handleLoginSubmit}>Se connecter</Button>
-                    <Link className={classes.link} href="#" onClick={showSignup} >Vous n'avez pas encore de compte ? S'inscrire.</Link>
-                </form>
-                <form id="signup-form" className={classes.signupRoot} noValidate autoComplete="off">
-                    <FormControl className={clsx(classes.margin, classes.formField)}>
-                        <InputLabel className={classes.label} htmlFor="standard-adornment-login">Email</InputLabel>
-                        <Input className={classes.label} id="signup-email-field" type="email" endAdornment={
-                            <InputAdornment position="end">
-                                <AccountCircle className={classes.icon} />
-                            </InputAdornment>
-                        } onChange={(e) => setEmail(e.target.value)}/>
-                    </FormControl>
-                    <FormControl className={clsx(classes.margin, classes.formField)}>
-                        <InputLabel className={classes.label} htmlFor="standard-adornment-password">Mot de passe</InputLabel>
-                        <Input className={classes.label} id="signup-password-field" type={showPassword ? 'text' : 'password'} endAdornment={
-                            <InputAdornment position="end">
-                                <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
-                                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                                </IconButton>
-                            </InputAdornment>
-                        } onChange={(e) => setPassword(e.target.value)}/>
-                    </FormControl>
-                    <FormControl className={clsx(classes.margin, classes.formField)}>
-                        <InputLabel className={classes.label} htmlFor="standard-adornment-firstname">Prénom</InputLabel>
-                        <Input className={classes.label} id="firstname-field" type="text" onChange={(e) => setFirstname(e.target.value)}/>
-                    </FormControl>
-                    <FormControl className={clsx(classes.margin, classes.formField)}>
-                        <InputLabel className={classes.label} htmlFor="standard-adornment-lastname">Nom</InputLabel>
-                        <Input className={classes.label} id="lastname-field" type="text" onChange={(e) => setLastname(e.target.value)}/>
-                    </FormControl>
-                    <FormControl className={clsx(classes.margin, classes.formField)}>
-                        <InputLabel className={classes.label} htmlFor="standard-adornment-status">Statut</InputLabel>
-                        <Input className={classes.label} id="status-field" type="text" onChange={(e) => setStatus(e.target.value)}/>
-                        <FormHelperText className={classes.label} id="outlined-weight-helper-text">Ex : Directeur commerciale.</FormHelperText>
-                    </FormControl>
-                    <FormControl className={clsx(classes.margin, classes.formField)}>
-                        <Input className={classes.label} id="hiringDate-field" type="date" onChange={(e) => setHiringDate(e.target.value)}/>
-                        <FormHelperText className={classes.label} id="outlined-weight-helper-text">Date d'embauche</FormHelperText>
-                    </FormControl>
-                    <FormControl className={ classes.checkbox}>
-                        <FormControlLabel required control={ 
-                            <Checkbox name="RGPD" color="default" inputProps={{ 'aria-label': 'checkbox with default color' }} />
-                            } label="En cochant cette case, je reconnais avoir pris connaissance de la charte RGPD de CAP Formation et en accepte les termes."/>
-                    </FormControl>
-                    <Button size="large" className={classes.signupButton} onClick={handleSignupSubmit}>S'inscrire</Button>
-                    <Link className={classes.link} href="accueil" onClick={showLogin} >Vous avez déjà un compte ? Se connecter.</Link>
-                </form>
-            </div>
+                <div id="form-container">
+                    <img src={ logo } alt='[ logo Postmania ]' className={classes.logo} id="logo" />
+                    <form id="login-form" className={classes.loginRoot} noValidate autoComplete="off">
+                        <FormControl className={clsx(classes.margin, classes.formField)}>
+                            <InputLabel className={classes.label} htmlFor="standard-adornment-login">Email</InputLabel>
+                            <Input  className={classes.label} id="login-email-field" type="email" endAdornment={
+                                <InputAdornment position="end">
+                                    <AccountCircle className={classes.icon} />
+                                </InputAdornment>
+                            } onChange={(e) => setEmail(e.target.value)}/>
+                        </FormControl>
+                        <FormControl className={clsx(classes.margin, classes.formField)}>
+                            <InputLabel className={classes.label} htmlFor="standard-adornment-password">Mot de passe</InputLabel>
+                            <Input className={classes.label} id="login-password-field" type={showPassword ? 'text' : 'password'} endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
+                                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                                    </IconButton>
+                                </InputAdornment>
+                            } onChange={(e) => setPassword(e.target.value)}/>
+                        </FormControl>
+                        <Button size="large" className={classes.loginButton} onClick={handleLoginSubmit}>Se connecter</Button>
+                        <Link className={classes.link} href="#" onClick={showSignup} >Vous n'avez pas encore de compte ? S'inscrire.</Link>
+                    </form>
+                    <form id="signup-form" className={classes.signupRoot} noValidate autoComplete="off">
+                        <FormControl className={clsx(classes.margin, classes.formField)}>
+                            <InputLabel className={classes.label} htmlFor="standard-adornment-login">Email</InputLabel>
+                            <Input className={classes.label} id="signup-email-field" type="email" endAdornment={
+                                <InputAdornment position="end">
+                                    <AccountCircle className={classes.icon} />
+                                </InputAdornment>
+                            } onChange={(e) => setEmail(e.target.value)}/>
+                        </FormControl>
+                        <FormControl className={clsx(classes.margin, classes.formField)}>
+                            <InputLabel className={classes.label} htmlFor="standard-adornment-password">Mot de passe</InputLabel>
+                            <Input className={classes.label} id="signup-password-field" type={showPassword ? 'text' : 'password'} endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
+                                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                                    </IconButton>
+                                </InputAdornment>
+                            } onChange={(e) => setPassword(e.target.value)}/>
+                        </FormControl>
+                        <FormControl className={clsx(classes.margin, classes.formField)}>
+                            <InputLabel className={classes.label} htmlFor="standard-adornment-firstname">Prénom</InputLabel>
+                            <Input className={classes.label} id="firstname-field" type="text" onChange={(e) => setFirstname(e.target.value)}/>
+                        </FormControl>
+                        <FormControl className={clsx(classes.margin, classes.formField)}>
+                            <InputLabel className={classes.label} htmlFor="standard-adornment-lastname">Nom</InputLabel>
+                            <Input className={classes.label} id="lastname-field" type="text" onChange={(e) => setLastname(e.target.value)}/>
+                        </FormControl>
+                        <FormControl className={clsx(classes.margin, classes.formField)}>
+                            <InputLabel className={classes.label} htmlFor="standard-adornment-status">Statut</InputLabel>
+                            <Input className={classes.label} id="status-field" type="text" onChange={(e) => setStatus(e.target.value)}/>
+                            <FormHelperText className={classes.label} id="outlined-weight-helper-text">Ex : Directeur commerciale.</FormHelperText>
+                        </FormControl>
+                        <FormControl className={clsx(classes.margin, classes.formField)}>
+                            <Input className={classes.label} id="hiringDate-field" type="date" onChange={(e) => setHiringDate(e.target.value)}/>
+                            <FormHelperText className={classes.label} id="outlined-weight-helper-text">Date d'embauche</FormHelperText>
+                        </FormControl>
+                        <FormControl className={ classes.checkbox}>
+                            <FormControlLabel required control={ 
+                                <Checkbox name="RGPD" color="default" inputProps={{ 'aria-label': 'checkbox with default color' }} />
+                                } label="En cochant cette case, je reconnais avoir pris connaissance de la charte RGPD de CAP Formation et en accepte les termes."/>
+                        </FormControl>
+                        <Button size="large" className={classes.signupButton} onClick={handleSignupSubmit}>S'inscrire</Button>
+                        <Link className={classes.link} href="/" onClick={showLogin} >Vous avez déjà un compte ? Se connecter.</Link>
+                    </form>
+                </div>
         );
     };
 

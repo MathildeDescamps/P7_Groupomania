@@ -5,6 +5,7 @@ import Accueil from './containers/Accueil';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
+
 if (window.location.pathname === '/') {
   ReactDOM.render(
     <App url='/' />,

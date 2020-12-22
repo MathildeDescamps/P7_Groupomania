@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
-import PostContainer from '../components/PostContainer/PostContainer';
+import PostContainer from '../components/Container/PostContainer';
+import ThemeContainer from '../components/Container/ThemeContainer';
 
 
 
@@ -21,13 +22,14 @@ class Accueil extends Component {
   render() {
     return (
       <>
-        <GlobalStyle/>
+        <GlobalStyle/> 
         <Header />
         <PostContainer />
-        <Footer />
+        <ThemeContainer />
+        <Footer /> 
       </>
     );
   }
-}
+};
 
 export default Accueil;
