@@ -45,10 +45,17 @@ const useStyles = makeStyles(() => ({
             width: '14ch',
             textAlign: 'center',
             margin: '1ch',
-            '&:hover': {
-                backgroundColor: '#D35233',
-                color: 'white',
-            },
+        },
+        activeTheme: {
+            fontSize: '18px',
+            fontWeight: '400',
+            padding: '1ch',
+            maxWidth: '24ch',
+            width: '14ch',
+            textAlign: 'center',
+            margin: '1ch',
+            backgroundColor: '#D35233',
+            color: 'white',
         },
 
 }));
@@ -59,6 +66,8 @@ const PageBodyContainer = () => {
     
     const [postList, setPostList] = useState(null);
     const [themeList, setThemeList] = useState(null);
+    const [selectedThemes, setSelectedThemes] = useState([]);
+
     const classes = useStyles();
     
     //On envoi une requête GET à l'API pour récupérer un tableau 'postList' contenant des objets (1 objet / post).
@@ -75,15 +84,11 @@ const PageBodyContainer = () => {
         .then(data => setThemeList(data))
     }, []);
 
-    const handleFilter = (e) => {
-        console.log(e.target.value);
-    };
-
     return (
         <>
             <CssBaseline />
             <div className= { classes.postContainer }>
-                {postList && postList.map(post => { 
+                {postList && postList.filter(post => ((selectedThemes.includes(post.theme))||(selectedThemes.length == 0))).map(post => { 
                     return <Post key={post.id} post={post} />;
                 })}
             </div>
@@ -91,7 +96,18 @@ const PageBodyContainer = () => {
                 <div className={ classes.themeContainerHeader } >THÈMES</div>
                 {themeList && themeList.map((theme) => { 
                     return (
-                        <Button key={theme.id} className={ classes.themeButton } onClick={handleFilter} > 
+                        <Button key={theme.id} 
+                            className={selectedThemes.includes(theme.id) ? classes.activeTheme : classes.themeButton}
+                            onClick={(props) => { 
+                                if (!selectedThemes.includes(theme.id)) {
+                                    setSelectedThemes([...selectedThemes, theme.id]);
+                                }
+                                else {
+                                    setSelectedThemes(selectedThemes.filter(item => { 
+                                        return item !== theme.id; 
+                                    }));
+                                }
+                            }} > 
                             {theme && theme.name} 
                         </Button>
                     )
@@ -100,5 +116,6 @@ const PageBodyContainer = () => {
         </>
     )
 };
+//}
 
 export default PageBodyContainer;

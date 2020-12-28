@@ -4,6 +4,7 @@ import logo from '../../header-logo.png';
 import { Avatar, Link } from '@material-ui/core/';
 import SearchBar from "material-ui-search-bar";
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 const UrlAPI = 'http://localhost:3000/api/';
 
@@ -34,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
     },
+    avatar: {
+        cursor: 'pointer',
+    },
     link: {
         color: '#0E0C0C',
         fontWeight: '500',
@@ -50,6 +54,7 @@ const Header = () => {
     const [search, setSearch] = useState();
     const [searchInput, setSearchInput] = useState("");
     const [list, setList] = useState([]);
+    const history = useHistory();
 
     const searchOnChange = (value) => {
         const found = list.find((user) => {
@@ -76,6 +81,10 @@ const Header = () => {
         });
     }, []);
 
+    const goToProfilePage = () => {
+        history.push('/profile');
+    };
+
     return (
     <>
         <div id="header-container" className={ classes.root } >
@@ -96,7 +105,7 @@ const Header = () => {
             {users && users.map(user => { 
                 return <p key={user.id} >{user.firstname}</p>;})}
             <div id="right-part" className={ classes.rightPart } >
-                <Avatar alt="" src="/static/images/avatar/1.jpg" />
+                <Avatar className={ classes.avatar } alt="" src="/static/images/avatar/1.jpg" onClick={goToProfilePage} />
                 <Link className={classes.link} href="/" >Se déconnecter</Link>
             </div>
         </div>
