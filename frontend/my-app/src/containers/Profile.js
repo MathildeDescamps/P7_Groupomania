@@ -2,17 +2,14 @@ import React, { Component } from 'react';
 import styled, { createGlobalStyle } from 'styled-components';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
-import PostContainer from '../components/Container/PostContainer';
-import ThemeContainer from '../components/Container/ThemeContainer';
-
+import ProfilePageBodyContainer from '../components/PostAndTheme/ProfilePageBodyContainer';
 
 class Profile extends Component {
   render() {
     return (
       <>
         <Header />
-        <PostContainer />
-        <ThemeContainer />
+        <ProfilePageBodyContainer />
         <Footer /> 
       </>
     );
