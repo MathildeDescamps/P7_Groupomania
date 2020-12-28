@@ -3,7 +3,7 @@ import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import { Button } from '@material-ui/core/';
 
-const UrlAPI = 'http://localhost:3000/api/';
+const UrlAPI = 'http://localhost:3000/api/themes/';
 
 //STYLE DU COMPOSANT :
 
@@ -22,29 +22,32 @@ const useStyles = makeStyles((theme) => ({
             backgroundColor: '#D35233',
             color: 'white',
         },
+        clickedButton: {
+            backgroundColor: 'red',
+            color: 'white',
+        },
     },
 }));
 
 // LOGIQUE DU COMPOSANT :
 
-const Theme = ({theme}) => {
+const Theme = props => {
 
-    const [themeInfos, setThemeInfos] = useState();
-    
-    useEffect ( () => {
-        axios.get(UrlAPI + 'themes/' + theme)
-            .then(result => result.data)
-            .then(data => setThemeInfos(data[0]));
-    }, []);
-    
     const classes = useStyles();
 
-    const handleFilter = (e) => {};
-
+    let setThemeClicked = () => {
+        let url = new URL('http://localhost:5000/accueil');
+        let params = new URLSearchParams(url.search);
+        params.set('theme_id', props.theme.id);
+        url.search = params.toString();
+        let newUrl = url.toString();
+        console.log(newUrl);
+        props.filter();
+    } 
     return(
         <>
-            <Button  className={ classes.root } key={theme.id} onClick={handleFilter} >
-                {themeInfos && themeInfos.name}
+            <Button className={ classes.root } onClick={() => { setThemeClicked(); }}> 
+                {props.theme && props.theme.name} 
             </Button>
         </>
     );

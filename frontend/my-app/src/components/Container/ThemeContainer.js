@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Theme from './Theme/Theme';
 import axios from 'axios';
@@ -29,26 +28,24 @@ const useStyles = makeStyles((theme) => ({
         },
 }));
 
-const ThemeContainer = () => {
+const ThemeContainer = props => {
     
-    //let { id } = useParams();
-
     const [themeList, setThemeList] = useState(null);
     
     const classes = useStyles();
+
     //On envoi une requête GET à l'API pour récupérer un tableau 'themeList' contenant des objets (1 objet / theme).
     useEffect ( () => {
         axios.get(UrlAPI + 'themes')
         .then(result => result.data)
         .then(data => setThemeList(data))
-        .then(console.log(themeList));
     }, []);
 
     return (
             <div className={ classes.root } >
                 <div className={ classes.header } >THÈMES</div>
                 {themeList && themeList.map(theme => { 
-                return <Theme key={theme.id} theme={theme.id} />;})}
+                return <Theme filter={props.filter}  key={theme.id} theme={theme} />;})}
             </div>
     );
 };

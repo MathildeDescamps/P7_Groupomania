@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import styled, { createGlobalStyle } from 'styled-components';
 import AuthForm from '../components/AuthForm/AuthForm';
 import Accueil from './Accueil';
-
+import Profile from './Profile';
+import { useParams } from 'react-router-dom';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -25,9 +26,7 @@ class App extends Component {
         <Switch>
           <Route path="/" exact component={AuthForm} />
           <Route path="/accueil" exact component={Accueil} />
-          <Route path="/accueil/:id" exact component={Accueil} />
         </Switch>
-
       </Router>
       </>
     );

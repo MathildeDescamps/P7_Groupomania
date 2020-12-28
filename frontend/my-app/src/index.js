@@ -5,19 +5,10 @@ import Accueil from './containers/Accueil';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
-
-if (window.location.pathname === '/') {
   ReactDOM.render(
     <App url='/' />,
     document.getElementById('root')
   );
-} else if (window.location.pathname === '/accueil') {
-  ReactDOM.render(
-    <Accueil url='/accueil' />,
-    document.getElementById('accueil')
-  );
-};
-
 
 serviceWorkerRegistration.register();
 

@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import {CssBaseline} from '@material-ui/core';
 import Post from './Post/Post';
+import Theme from './Theme/Theme';
+import ThemeContainer from './ThemeContainer';
 import axios from 'axios';
 
 const UrlAPI = 'http://localhost:3000/api/';
@@ -15,9 +17,7 @@ const useStyles = makeStyles((theme) => ({
         },
 }));
 
-const PostContainer = () => {
-    
-    //let { id } = useParams();
+const PostContainer = ({theme}) => {
 
     const [postList, setPostList] = useState(null);
     
