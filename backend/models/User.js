@@ -12,6 +12,7 @@ User.init({
     email: DataTypes.STRING,
     status: DataTypes.STRING,
     hiringDate: DataTypes.DATE,
+    profilePic: DataTypes.BLOB,
     password: DataTypes.STRING
 }, { sequelize, modelName: 't_users' });
 

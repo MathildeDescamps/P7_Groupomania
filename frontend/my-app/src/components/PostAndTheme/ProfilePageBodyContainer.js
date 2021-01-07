@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline, Button, Avatar } from '@material-ui/core';
 import Post from './Post';
+import CreatePost from './CreatePost';
 import axios from 'axios';
 
 const UrlAPI = 'http://localhost:3000/api/';
@@ -46,10 +47,21 @@ const useStyles = makeStyles(() => ({
             width: '14ch',
             textAlign: 'center',
             margin: '1ch',
-            '&:hover': {
+            "&:hover": {
                 backgroundColor: '#D35233',
-                color: 'white',
+                color: '#FFFFFE',
             },
+        },
+        activeTheme: {
+            fontSize: '18px',
+            fontWeight: '400',
+            padding: '1ch',
+            maxWidth: '24ch',
+            width: '14ch',
+            textAlign: 'center',
+            margin: '1ch',
+            backgroundColor: '#D35233',
+            color: 'white',
         },
         profileContainer: {
             backgroundColor: '#FFFFFF',
@@ -86,15 +98,22 @@ const useStyles = makeStyles(() => ({
 // LOGIQUE :
 
 const PageBodyContainer = () => {
-    
+        
+    //On initialise le state.
     const [postList, setPostList] = useState(null);
     const [themeList, setThemeList] = useState(null);
+    const [selectedThemes, setSelectedThemes] = useState([]);
+    const [userList, setUserList] = useState([]);
+
     const classes = useStyles();
+
     
     //On envoi une requête GET à l'API pour récupérer un tableau 'postList' contenant des objets (1 objet / post).
     useEffect ( () => {
         axios.get(UrlAPI + 'posts')
-        .then(result => result.data)
+        .then(result => {
+            return result.data;
+        })
         .then(data => setPostList(data));
     }, []);
 
@@ -102,36 +121,63 @@ const PageBodyContainer = () => {
     useEffect ( () => {
         axios.get(UrlAPI + 'themes')
         .then(result => result.data)
-        .then(data => setThemeList(data))
+        .then(data => setThemeList(data));
     }, []);
 
-    const handleFilter = (e) => {
+    //On récupère la liste des users que l'on stocke dans le tableau 'userList'.
+    useEffect ( () => {
+        axios.get(UrlAPI + 'users')
+        .then(result => result.data)
+        .then(data => setUserList(data));
+    }, []);
+
+    let url = window.location.pathname;
+    let userClicked = url.split('profile/')[1];
+
+    const findUserClicked = (i) => {
+        userList.forEach(user => {
+            if (user.id == userClicked) {
+                userClicked = user;
+            } else { return; }
+        });
     };
+
+    findUserClicked();
 
     return (
         <>
             <CssBaseline />
             <div className= { classes.profileContainer }> 
                 <Avatar alt="" src="/static/images/avatar/1.jpg" className= { classes.avatar } />
-                <h3 className= { classes.userName } >User name</h3>
+                <h3 className= { classes.userName }>{userClicked.firstname + ' ' + userClicked.lastname}  </h3>
                 <p className= { classes.list } >
-                    <b>Statut</b><br/>
-                    Date d'embauche<br/>
-                    Adresse mail<br/>
-                    <b>Téléphone</b><br/>
+                    <b>{userClicked.status}</b><br/>
+                    Date d'embauche: {userClicked.hiringDate}<br/>
+                    Email : {userClicked.email}<br/>
                 </p>
             </div>
             <div className= { classes.postContainer }>
-                {postList && postList.map(post => { 
+                <CreatePost themes={themeList} />
+                {postList && postList.filter(post => ((selectedThemes.includes(post.theme))||(selectedThemes.length == 0))).map(post => { 
                     return <Post key={post.id} post={post} />;
                 })}
             </div>
             <div className={ classes.themeContainer } >
                 <div className={ classes.themeContainerHeader } >THÈMES</div>
                 {themeList && themeList.map((theme) => { 
-                    const themeId = theme.id;
                     return (
-                        <Button key={theme.id} id={themeId} className={ classes.themeButton } onClick={handleFilter} > 
+                        <Button key={theme.id} 
+                            className={selectedThemes.includes(theme.id) ? classes.activeTheme : classes.themeButton}
+                            onClick={(props) => { 
+                                if (!selectedThemes.includes(theme.id)) {
+                                    setSelectedThemes([...selectedThemes, theme.id]);
+                                }
+                                else {
+                                    setSelectedThemes(selectedThemes.filter(item => { 
+                                        return item !== theme.id; 
+                                    }));
+                                }
+                            }} > 
                             {theme && theme.name} 
                         </Button>
                     )

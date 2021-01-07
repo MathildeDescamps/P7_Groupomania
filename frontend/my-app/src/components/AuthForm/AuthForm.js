@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import App from '../../containers/App';
-import Accueil from '../../containers/Accueil';
 import clsx from 'clsx';
 import { Button, IconButton, Input, InputLabel, InputAdornment, Link, FormControl, FormControlLabel, FormHelperText, Checkbox } from '@material-ui/core/';
 import AccountCircle from '@material-ui/icons/AccountCircle';
@@ -139,8 +137,8 @@ const AuthForm = () => {
                 data: { email : email, password: password}
             })
             .then(function (response) {
-                //On traite la suite une fois la réponse obtenue 
-                console.log(response);
+                //Le backend nous renvoi un token et les infos du user connecté (que l'on stocke dans le session storage).
+                sessionStorage.setItem("currentUser", JSON.stringify(response.data.user));
             })
             .catch(function (error) {
                 //On traite ici les erreurs éventuellement survenues

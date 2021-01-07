@@ -19,10 +19,6 @@ Post.init({
         type: DataTypes.INTEGER,
         defaultValue: 1
     },
-    imageUrl: {
-        type: DataTypes.STRING,
-        defaultValue: null
-    }
 }, { sequelize, modelName: 't_posts' });
 
 

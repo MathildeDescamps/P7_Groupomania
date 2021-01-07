@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline, Button } from '@material-ui/core';
 import Post from './Post';
+import CreatePost from './CreatePost';
 import axios from 'axios';
 
 const UrlAPI = 'http://localhost:3000/api/';
@@ -45,6 +45,10 @@ const useStyles = makeStyles(() => ({
             width: '14ch',
             textAlign: 'center',
             margin: '1ch',
+            "&:hover": {
+                backgroundColor: '#D35233',
+                color: '#FFFFFE',
+            },
         },
         activeTheme: {
             fontSize: '18px',
@@ -67,6 +71,7 @@ const PageBodyContainer = () => {
     const [postList, setPostList] = useState(null);
     const [themeList, setThemeList] = useState(null);
     const [selectedThemes, setSelectedThemes] = useState([]);
+    const [userList, setUserList] = useState();
 
     const classes = useStyles();
     
@@ -87,7 +92,8 @@ const PageBodyContainer = () => {
     return (
         <>
             <CssBaseline />
-            <div className= { classes.postContainer }>
+                <div className= { classes.postContainer }>
+                <CreatePost themes={themeList} />
                 {postList && postList.filter(post => ((selectedThemes.includes(post.theme))||(selectedThemes.length == 0))).map(post => { 
                     return <Post key={post.id} post={post} />;
                 })}
@@ -116,6 +122,5 @@ const PageBodyContainer = () => {
         </>
     )
 };
-//}
 
 export default PageBodyContainer;
