@@ -104,7 +104,7 @@ const PageBodyContainer = () => {
                     return (
                         <Button key={theme.id} 
                             className={selectedThemes.includes(theme.id) ? classes.activeTheme : classes.themeButton}
-                            onClick={(props) => { 
+                            onClick={() => { 
                                 if (!selectedThemes.includes(theme.id)) {
                                     setSelectedThemes([...selectedThemes, theme.id]);
                                 }

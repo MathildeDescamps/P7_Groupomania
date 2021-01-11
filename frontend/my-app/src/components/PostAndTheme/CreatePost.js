@@ -121,7 +121,6 @@ const CreatePost = props => {
             .then(function (response) {
                 //On traite la suite une fois la réponse obtenue 
                 let postId = response.data.id;
-                console.log('post id =>', postId);
                 if (pictures.length >0) {
                     const fd = new FormData();
                     let pictureList = [];
@@ -148,15 +147,6 @@ const CreatePost = props => {
                 //On traite ici les erreurs éventuellement survenues
                 console.log(error);
             });
-
-            // //On place ici la logique à appliquer lorsque le user clique sur 'PUBLIER'.
-            // try {
-            //     const res = await axios.post(UrlAPI + '/posts', fd, config);
-            //     console.log(res.data);
-            // }catch(error) {
-            //     //On traite ici les erreurs éventuellement survenues
-            //     console.log(error);
-            // };
         };
 
     return(

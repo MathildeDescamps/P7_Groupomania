@@ -29,7 +29,7 @@ export default function SearchBox() {
       options={userList}
       clearOnEscape
       getOptionLabel={(option) => option.firstname + ' ' + option.lastname}
-      style={{ width: 300 }}
+      style={{ width: 300, backgroundColor: 'white', outlineStyle: 'none' }}
       renderInput={(params) => <TextField {...params} label="Rechercher un collègue..." variant="outlined" />}
     />
   );

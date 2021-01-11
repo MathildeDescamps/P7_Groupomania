@@ -31,3 +31,4 @@ const storage = multer.diskStorage({
 });
 //On exporte l'élément multer configuré en lui passant la constante storage et on lui indique qu'on accepte uniquement les fichiers de type image.
 module.exports = multer({ storage: storage }).array('image', 10);
+
