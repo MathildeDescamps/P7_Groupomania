@@ -107,7 +107,6 @@ const PageBodyContainer = () => {
 
     const classes = useStyles();
 
-    
     //On envoi une requête GET à l'API pour récupérer un tableau 'postList' contenant des objets (1 objet / post).
     useEffect ( () => {
         axios.get(UrlAPI + 'posts')
