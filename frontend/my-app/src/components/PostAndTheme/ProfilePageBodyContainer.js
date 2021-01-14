@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { CssBaseline, Button, Avatar } from '@material-ui/core';
-import PersonIcon from '@material-ui/icons/Person';
+import { CssBaseline, Button, Avatar, Link } from '@material-ui/core';
+import { Person, ArrowBack } from '@material-ui/icons';
 import Post from './Post';
 import CreatePost from './CreatePost';
 import axios from 'axios';
 import FileBase64 from 'react-file-base64';
+
 
 const UrlAPI = 'http://localhost:3000/api/';
 
@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
         postContainer: {
             width: '60%',
             position: 'relative',
-            paddingTop: '10ch',
+            paddingTop: '20ch',
             margin: 'auto',
         },
         themeContainer: {
@@ -87,7 +87,6 @@ const useStyles = makeStyles(() => ({
                 display: "none",
             },
             "&:hover": {
-                //opacity: '0.5',
                 "&>span": {
                     display: 'block',
                     textDecoration: 'underline',
@@ -109,6 +108,19 @@ const useStyles = makeStyles(() => ({
             marginLeft: '0',
             lineHeight: '2',
         },
+        backToHome: {
+            display: 'flex',
+            alignItems: 'center',
+            width: '25%',
+            color: '#757575',
+            position: 'relative',
+            bottom: '8ch',
+            marginLeft: '2ch',
+            "&:hover": {
+                color: '#D64F30',
+                textDecoration: 'none',
+            },
+        },
 }));
 
 // LOGIQUE :
@@ -119,6 +131,7 @@ const ProfilePageBodyContainer = () => {
     const [postList, setPostList] = useState(null);
     const [themeList, setThemeList] = useState(null);
     const [selectedThemes, setSelectedThemes] = useState([]);
+    const [userInfos, setUserInfos] = useState(null);
     const [pic, setPic] = useState("");
     const [image, setImage] = useState("");
 
@@ -126,9 +139,9 @@ const ProfilePageBodyContainer = () => {
 
     let url = window.location.pathname;
     let userId = url.split('profile/')[1];
-    let userInfos; 
     let buff; 
     let src; 
+    let currentUser = sessionStorage.getItem("currentUser");
 
     //On envoi une requête GET à l'API pour récupérer un tableau 'postList' contenant des objets (1 objet / post).
     useEffect ( () => {
@@ -144,16 +157,14 @@ const ProfilePageBodyContainer = () => {
         .then(data => setThemeList(data));
     }, []);
 
-    
-
     //On récupère les infos du user cliqué et on traite la photo de profile pour pouvoir l'afficher.
     useEffect ( () => {
         axios.get(UrlAPI + 'users/' + userId)
             .then(res => { 
-                userInfos = res.data[0];
-                buff = JSON.stringify(userInfos.profilePic.data);
-                src = Buffer.from(buff).toString('base64');
-                setPic(JSON.stringify(src));
+                setUserInfos(res.data[0]);
+                buff = res.data[0].profilePic.data;
+                src = Buffer.from(buff).toString();
+                setImage(src);
             })
             .catch(err => console.log(err));
     }, []);
@@ -161,8 +172,15 @@ const ProfilePageBodyContainer = () => {
     //On récupère l'image uploadée par le user pour la mettre à jour en base. 
     const changeImage = (img) => {
         setImage(img.base64);
-        axios.put(UrlAPI + 'users/' + userId + '/image', { image: image })
-            .then(result => console.log(result))
+        console.log("img =>", img.base64);
+        axios.put(UrlAPI + 'users/' + userInfos.id + '/image', { image: img.base64 })
+            .then(result => {
+                console.log(result);
+                /* if (userInfos.id == currentUser.id) {
+                    sessionStorage.clear();
+                    sessionStorage.setItem("currentUser", current)
+                }  */
+            })
             .catch(err => console.log(err))
     };
     
@@ -171,10 +189,10 @@ const ProfilePageBodyContainer = () => {
             <CssBaseline />
             <div className= { classes.profileContainer }> 
                 <Avatar className= { classes.avatar } >
-                    <PersonIcon style={{fontSize: 60}} id="avatar"/>
-                    <FileBase64 multiple={ false } onDone={changeImage} />
-                    <img id="image" src={pic} style={{ width: 'auto', height: 'auto'}} />
+                    <Person style={{fontSize: 60}} id="avatar"/>
+                    <img id="image" src={image} style={{ width: 'auto', height: 'auto'}} />
                 </Avatar>
+                <FileBase64 multiple={ false } onDone={changeImage} />
                 <h3 className= { classes.userName }> {userInfos && userInfos.firstname + ' ' + userInfos.lastname}  </h3>
                 <p className= { classes.list } >
                     <b>{ userInfos && userInfos.status}</b><br/>
@@ -183,7 +201,10 @@ const ProfilePageBodyContainer = () => {
                 </p>
             </div>
             <div className= { classes.postContainer }>
-                <CreatePost themes={themeList} />
+                <Link className={classes.backToHome} href='/accueil'>
+                    <ArrowBack style={{ fontSize: 35, cursor: 'pointer', marginRight: '1ch' }} />
+                    <p>Revenir à la page d'accueil</p>
+                </Link>
                 {postList && postList.filter(post => (userInfos && (post.user == userInfos.id) && ((selectedThemes.includes(post.theme)) || (selectedThemes.length == 0)))).map(post => 
                     { 
                         return <Post key={post.id} post={post} />;
@@ -215,7 +236,4 @@ const ProfilePageBodyContainer = () => {
     );
 };
 
-//<Theme filter={props.filter}  key={theme.id} theme={theme} />
 export default ProfilePageBodyContainer;
-
-//a mettre dans File6Base4 : onDone={getImage}

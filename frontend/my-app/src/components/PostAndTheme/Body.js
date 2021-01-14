@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import Avatar from '@material-ui/core/Avatar';
 import BodyContent from './BodyContent';
 import axios from 'axios';
 
@@ -10,16 +11,16 @@ const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
         flexDirection: 'column',
-        width: '120ch',
+        width: '90%',
         margin: 'auto',
 
     },
     header: {
         backgroundColor: '#D75030',
         color: 'white',
-        width: '25ch',
+        width: '20%',
         padding: '2ch',
-        textAlign: 'center',
+        textAlign: 'left',
         "& a": {
             color: 'white',
             textDecoration: 'none',
@@ -57,7 +58,12 @@ const PostBody = ({post, user}) => {
     return(
         <div className={classes.root} >
             <div className={classes.header}>
-                <h2><a href={userProfile &&  "/profile/" + userProfile.id}> {userProfile && userProfile.firstname + ' ' + userProfile.lastname} </a></h2>
+                <h2>
+                    <a style={{display: 'flex',}} href={userProfile &&  "/profile/" + userProfile.id}> 
+                        {userProfile && userProfile.firstname + ' ' + userProfile.lastname}                
+                        <Avatar className={ classes.avatar }/>
+                    </a>
+                </h2>
             </div>
             <div className={classes.body} > 
                 <BodyContent url={post.url} content={post.content} />

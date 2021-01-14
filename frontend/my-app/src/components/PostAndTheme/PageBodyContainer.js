@@ -19,7 +19,6 @@ const useStyles = makeStyles(() => ({
             backgroundColor: '#F1D4D4',
             width: '20%',
             height: '100%',
-            position: 'absolute',
             position: 'fixed',
             right: '0', 
             top: '0',
@@ -34,6 +33,27 @@ const useStyles = makeStyles(() => ({
             fontWeight: '600',
             textAlign: 'center',
             padding: '1ch',
+        },
+        themeFlexBox: {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            height: '100%',
+        },
+        themesButtons: {
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+        },
+        cancelFiltersButton: {
+            backgroundColor: '#D35233',
+            color: 'white',
+            "&:hover": {
+                backgroundColor: '#B85030'
+            },
+            marginLeft: '1ch',
+            marginRight: '1ch',
+            marginTop: '1ch',
         },
         themeButton: {
             backgroundColor: '#FFFFFE',
@@ -61,7 +81,6 @@ const useStyles = makeStyles(() => ({
             backgroundColor: '#D35233',
             color: 'white',
         },
-
 }));
 
 // LOGIQUE :
@@ -89,35 +108,44 @@ const PageBodyContainer = () => {
         .then(data => setThemeList(data))
     }, []);
 
+    const cancelFilters = () => {
+        setSelectedThemes([]);
+    };
+
     return (
         <>
             <CssBaseline />
                 <div className= { classes.postContainer }>
-                <CreatePost themes={themeList} />
-                {postList && postList.filter(post => ((selectedThemes.includes(post.theme))||(selectedThemes.length == 0))).map(post => { 
-                    return <Post key={post.id} post={post} />;
-                })}
+                    <CreatePost themes={themeList} />
+                    {postList && postList.filter(post => ((selectedThemes.includes(post.theme))||(selectedThemes.length == 0))).map(post => { 
+                        return <Post key={post.id} post={post} />;
+                    })}
             </div>
             <div className={ classes.themeContainer } >
                 <div className={ classes.themeContainerHeader } >THÈMES</div>
-                {themeList && themeList.map((theme) => { 
-                    return (
-                        <Button key={theme.id} 
-                            className={selectedThemes.includes(theme.id) ? classes.activeTheme : classes.themeButton}
-                            onClick={() => { 
-                                if (!selectedThemes.includes(theme.id)) {
-                                    setSelectedThemes([...selectedThemes, theme.id]);
-                                }
-                                else {
-                                    setSelectedThemes(selectedThemes.filter(item => { 
-                                        return item !== theme.id; 
-                                    }));
-                                }
-                            }} > 
-                            {theme && theme.name} 
-                        </Button>
-                    )
-                })}
+                    <div className={classes.themeFlexBox}>
+                        <div className={classes.themesButtons}>
+                            {themeList && themeList.map((theme) => { 
+                                return (
+                                    <Button key={theme.id} 
+                                        className={selectedThemes.includes(theme.id) ? classes.activeTheme : classes.themeButton}
+                                        onClick={() => { 
+                                            if (!selectedThemes.includes(theme.id)) {
+                                                setSelectedThemes([...selectedThemes, theme.id]);
+                                            }
+                                            else {
+                                                setSelectedThemes(selectedThemes.filter(item => { 
+                                                    return item !== theme.id; 
+                                                }));
+                                            }
+                                        }} > 
+                                        {theme && theme.name} 
+                                    </Button>
+                                )
+                            })}
+                        </div>
+                        <Button className={classes.cancelFiltersButton} onClick={cancelFilters} >Retirer tous les filtres</Button>
+                    </div>
             </div>
         </>
     )

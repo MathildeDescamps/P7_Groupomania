@@ -5,10 +5,8 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles(() => ({
     root: {
         backgroundColor: 'white',
-        width: '110ch',
+        width: '100%',
         padding: '2ch',
-        marginLeft: '3ch',
-        marginRight: 'auto',
         textAlign: 'left',
     },
 }));
@@ -29,7 +27,7 @@ const BodyContent = ({url, content}) => {
         <div className={classes.root} >
             {content}<br/>
             {url && url.map((img,i) =>  {
-                    return <img src={img} alt={getImageAlt(img)} style={{width: '100px'}} key={i} />;
+                    return <img src={img} alt={getImageAlt(img)} style={{width: '250px', marginRight: '2ch', marginTop: '2ch',}} key={i} />;
                 })}
         </div>
     );

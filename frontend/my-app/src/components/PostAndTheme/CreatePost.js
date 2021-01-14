@@ -12,15 +12,16 @@ const useStyles = makeStyles((theme) => ({
     createPostBlock: {
             display: 'flex',
             flexDirection: 'column',
-            width: '100ch',
+            width: '70%',
             margin: 'auto',  
+            marginTop: '4ch',
         },
         createPostHeader: {
             backgroundColor: '#D75030',
             color: 'white',
-            width: '30ch',
-            padding: '2ch',
-            textAlign: 'center',
+            width: '25%',
+            padding: '1ch',
+            textAlign: 'left',
             fontSize: '12px',
         },
         createPostBody: {
@@ -50,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
         buttons: {
             display: 'flex',
             width: '95%',
-            height: '3ch',
+            height: '3.5ch',
             margin: 'auto',
             marginTop: '2ch',
             justifyContent: 'space-between',
@@ -60,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
             fontWeight: '600',
             fontSize: '14px',   
             marginRight: '1ch',
+            marginTop: '0.5ch',
         },
         dropDownList: {
             width: '30%',
@@ -81,8 +83,9 @@ const useStyles = makeStyles((theme) => ({
         publish: {
             backgroundColor: '#D75030',
             color: '#FFFFFE',
-            borderRadius: '0',
-            width: '20%',
+            borderRadius: '5px',
+            width: '15%',
+            fontWeight: '400',
             "&:hover": {
                 backgroundColor: '#B85030',
             },
@@ -98,6 +101,8 @@ const CreatePost = props => {
     const [user, setUser] = useState('');
     const [theme, setTheme] = useState('');
     const [pictures, setPictures] = useState([]);
+
+    const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
     const handleChange = (event) => {
         setTheme(event.target.value);
@@ -116,7 +121,7 @@ const CreatePost = props => {
             axios({
                 method: 'post',
                 url: UrlAPI + '/posts',
-                data: { content : content, theme: theme, user: 5 }
+                data: { content : content, theme: theme, user: currentUser.id }
             })
             .then(function (response) {
                 //On traite la suite une fois la réponse obtenue 
@@ -166,7 +171,7 @@ const CreatePost = props => {
                         withPreview={true}
                         withLabel={false}
                         fileSizeError='Image trop volumineuse'
-                        buttonStyles={{backgroundColor: '#757575', borderRadius: '0', position: "relative", margin: "0"}}
+                        buttonStyles={{backgroundColor: '#757575', borderRadius: '5px', position: "relative", margin: "0", height: '30px'}}
                     />
                 </div>
                 <div className={classes.buttons}>

@@ -22,10 +22,10 @@ exports.getOneUser = (req, res, next) => {
 exports.updateImage = (req, res, next) => {
     let image = req.body.image;
     //On va chercher en base le user à mettre à jour avec findByPk (=find by primary key). 
-    User.findByPk(req.params.id)
-        .then(user => {
-                user.update({ profilePic: image});
-                res.status(200);
-        })
-        .catch(error => res.status(404).json({ error }));
+    User.update(
+        { profilePic: image },
+        { where: { id: req.params.id } })
+    .then(result => res.status(200).json(result))
+    .catch(err => console.log(err));
+        
 };
