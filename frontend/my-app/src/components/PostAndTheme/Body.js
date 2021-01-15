@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import BodyContent from './BodyContent';
 import axios from 'axios';
+import Likes from './Likes';
 
 const UrlAPI = 'http://localhost:3000/api/';
 
@@ -67,6 +68,7 @@ const PostBody = ({post, user}) => {
             </div>
             <div className={classes.body} > 
                 <BodyContent url={post.url} content={post.content} />
+                <Likes postId={post.id} />
             </div>
         </div>
     );

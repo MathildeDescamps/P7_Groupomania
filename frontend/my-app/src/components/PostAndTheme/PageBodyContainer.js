@@ -46,10 +46,10 @@ const useStyles = makeStyles(() => ({
             justifyContent: 'center',
         },
         cancelFiltersButton: {
-            backgroundColor: '#D35233',
+            backgroundColor: '#D64F30',
             color: 'white',
             "&:hover": {
-                backgroundColor: '#B85030'
+                backgroundColor: '#FF5F39'
             },
             marginLeft: '1ch',
             marginRight: '1ch',
@@ -66,7 +66,7 @@ const useStyles = makeStyles(() => ({
             textAlign: 'center',
             margin: '1ch',
             "&:hover": {
-                backgroundColor: '#D35233',
+                backgroundColor: '#D64F30',
                 color: '#FFFFFE',
             },
         },

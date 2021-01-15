@@ -31,7 +31,6 @@ exports.getPosts = (req, res, next) => {
         .then(posts => {
             let allPosts = posts.map(p => {
                 p.dataValues.url = getImages(p.id);
-                console.log(p.dataValues.url);
                 return p;
             });
             res.status(200).json(allPosts)
