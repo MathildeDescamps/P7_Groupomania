@@ -51,8 +51,17 @@ const useStyles = makeStyles(() => ({
 const Header = () => {
 
     const [userInfos, setUserInfos] = useState(null);
+    const [image, setImage] = useState("");
     const classes = useStyles();
-  
+
+    let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+    
+   useEffect ( () => {
+        let buff = currentUser.profilePic.data;
+        let src = Buffer.from(buff).toString();
+        setImage(src);
+    }, []);
+
     return (
     <>
         <div id="header-container" className={ classes.root } >
@@ -63,7 +72,9 @@ const Header = () => {
                 <SearchBox className={classes.centerPart} />
             </div>
             <div id="right-part" className={ classes.rightPart } >
-                <Avatar id="profile-picture" className={ classes.avatar }  alt="[ votre photo de profile ]"   />
+                <Avatar id="profile-picture" className={ classes.avatar }  alt="[ votre photo de profile ]">
+                    <img id="image" src={image} style={{ width: 'auto', height: 'auto'}} />
+                </Avatar>
                 <Link className={classes.link} href="/" >Se déconnecter</Link>
             </div>
         </div>

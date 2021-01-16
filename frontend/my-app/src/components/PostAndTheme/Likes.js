@@ -20,6 +20,7 @@ const useStyles = makeStyles((theme) => ({
         color: 'white',
         height: '5ch',
         width: '10%',
+        borderRadius: '5px',
         marginRight: '1ch',
         marginTop: '1ch',
         paddingLeft: '2ch',
@@ -42,38 +43,73 @@ const Likes = ({postId}) => {
     const classes = useStyles();
 
     const [mentions, setMentions] = useState({});
+    const [myMention, setMyMention] = useState(0);
 
     let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
     useEffect ( () => {
         axios.get(UrlAPI + '/mentions/' + postId)
-        .then(res => setMentions(res.data))
+        .then(res => { setMentions(res.data); })
         .catch(err => console.log(err));
+
+        axios.get(UrlAPI + '/mentions/mine/' + postId + '/' + currentUser.id)
+        .then(result => result.data)
+        .then(data => setMyMention(data.mention) );
+
     }, []);
+
+    const updateMyMention = (likedislike) => {
+        switch(myMention) {
+            case 0 :
+                if (likedislike == 1) {
+                    setMyMention(1);
+                    setMentions({ likes: mentions.likes+1, dislikes: mentions.dislikes });
+                } else if (likedislike == -1) {
+                    setMyMention(-1);
+                    setMentions({ likes: mentions.likes, dislikes: mentions.dislikes+1 });
+                }
+                break;
+            case 1 :
+                if (likedislike == 1) {
+                    setMyMention(0);
+                    setMentions({ likes: mentions.likes-1, dislikes: mentions.dislikes });
+                } else if (likedislike == -1) {
+                    setMyMention(-1);
+                    setMentions({ likes: mentions.likes-1, dislikes: mentions.dislikes+1 });
+                }
+                break;
+            case -1 :
+                if (likedislike == 1) {
+                    setMyMention(1);
+                    setMentions({ likes: mentions.likes+1, dislikes: mentions.dislikes-1 });
+                } else if (likedislike == -1) {
+                    setMyMention(0);
+                    setMentions({ likes: mentions.likes, dislikes: mentions.dislikes-1 });
+                }
+                break;
+        }
+    };
 
     const handleLike = (e) => {
         let name = e.target.getAttribute('name');
         if(name == 'like') {
-            console.log("liké !");
+            updateMyMention(1);
             axios({
                 method: 'post',
                 url: UrlAPI + '/mentions/' + postId,
                 data: {user: currentUser.id, post: postId, mention: 1}
             })
-            .then(setMentions(mentions.likes++))
+            .then(result => result.data)
             .catch(err => console.log(err));
-
-            return;
         } else if( name == 'dislike') {
-            console.log("disliké !");
+            updateMyMention(-1);
             axios({
                 method: 'post',
                 url: UrlAPI + '/mentions/' + postId,
                 data: {user: currentUser.id, post: postId, mention: -1}
             })
-            .then(setMentions(mentions.dislikes++))
+            .then(result => result.data)
             .catch(err => console.log(err));
-            return;
         } else {
             return;
         }
@@ -84,11 +120,11 @@ const Likes = ({postId}) => {
             <div className={classes.mentionsBlock}>
                 <div className={classes.mentionButton} name='like' onClick={handleLike}>
                     <ThumbUpIcon />
-                    <span className={classes.mentionNumber}>{mentions && mentions.likes}</span>
+                    <span className={classes.mentionNumber}>{mentions.likes}</span>
                 </div>
                 <div className={classes.mentionButton} name='dislike' onClick={handleLike}>
                     <ThumbDownIcon />
-                    <span className={classes.mentionNumber}>{mentions && mentions.dislikes}</span>
+                    <span className={classes.mentionNumber}>{mentions.dislikes}</span>
                 </div>
             </div>
         </>

@@ -4,6 +4,7 @@ import Avatar from '@material-ui/core/Avatar';
 import BodyContent from './BodyContent';
 import axios from 'axios';
 import Likes from './Likes';
+import Comments from './Comments';
 
 const UrlAPI = 'http://localhost:3000/api/';
 
@@ -46,12 +47,20 @@ const PostBody = ({post, user}) => {
 
     //On initialise le state.
     const [userProfile, setUserProfile] = useState();
+    const [image, setImage] = useState("");
+
+    let buff; 
+    let src; 
 
     //On fait une requête GET à l'API pour obtenir les infos du user concerné.
     useEffect ( () => {
         axios.get(UrlAPI + 'users/' + user)
-        .then(result => result.data)
-        .then(data => setUserProfile(data[0]));
+        .then(res => { 
+                setUserProfile(res.data[0]);
+                buff = res.data[0].profilePic.data;
+                src = Buffer.from(buff).toString();
+                setImage(src);
+            });
     }, []);
 
 
@@ -62,13 +71,16 @@ const PostBody = ({post, user}) => {
                 <h2>
                     <a style={{display: 'flex',}} href={userProfile &&  "/profile/" + userProfile.id}> 
                         {userProfile && userProfile.firstname + ' ' + userProfile.lastname}                
-                        <Avatar className={ classes.avatar }/>
+                        <Avatar className={ classes.avatar }>
+                            <img id="image" src={image} style={{ width: 'auto', height: 'auto'}} />
+                        </Avatar>
                     </a>
                 </h2>
             </div>
             <div className={classes.body} > 
                 <BodyContent url={post.url} content={post.content} />
                 <Likes postId={post.id} />
+                <Comments postId={post.id} />
             </div>
         </div>
     );

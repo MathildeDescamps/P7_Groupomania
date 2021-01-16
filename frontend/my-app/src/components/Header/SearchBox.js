@@ -24,7 +24,7 @@ export default function SearchBox() {
       value={value}
       onChange={(event, newValue) => {
         setValue(newValue);
-        (newValue && history.push("/profile/" + newValue.id)); 
+        if (newValue) window.location.pathname = "/profile/" + newValue.id; 
       }}
       options={userList}
       clearOnEscape

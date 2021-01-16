@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
         postTextarea: {
             width: '100%',
             height: 'auto',
+            fontFamily: 'Avenir, Segoe, UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif',
             border: 'none',
             "&:focus": {
                 outline: 'none',

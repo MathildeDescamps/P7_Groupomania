@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import styled, { createGlobalStyle } from 'styled-components';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 import ProfilePageBodyContainer from '../components/PostAndTheme/ProfilePageBodyContainer';

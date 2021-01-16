@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline, Button, Avatar, Link } from '@material-ui/core';
 import { Person, ArrowBack } from '@material-ui/icons';
 import Post from './Post';
-import CreatePost from './CreatePost';
 import axios from 'axios';
 import FileBase64 from 'react-file-base64';
 
@@ -113,8 +112,8 @@ const useStyles = makeStyles(() => ({
             alignItems: 'center',
             width: '25%',
             color: '#757575',
-            position: 'relative',
-            bottom: '8ch',
+            position: 'fixed',
+            marginTop: '-80px',
             marginLeft: '2ch',
             "&:hover": {
                 color: '#D64F30',
@@ -132,7 +131,6 @@ const ProfilePageBodyContainer = () => {
     const [themeList, setThemeList] = useState(null);
     const [selectedThemes, setSelectedThemes] = useState([]);
     const [userInfos, setUserInfos] = useState(null);
-    const [pic, setPic] = useState("");
     const [image, setImage] = useState("");
 
     const classes = useStyles();

@@ -11,6 +11,8 @@ const User = require('./models/User');
 const Post = require('./models/Post');
 const Theme = require('./models/Theme');
 const Mention = require('./models/Mention');
+const Comment = require('./models/Comment');
+
 
 //On importe la middleware d'authentification :
 //const auth = require('./middlewares/auth');
@@ -21,6 +23,7 @@ const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 const themeRoutes = require('./routes/theme');
 const mentionRoutes = require('./routes/mention');
+const commentRoutes = require('./routes/comment');
 
 //Headers pour éviter les erreurs de CORS.
 app.use((req, res, next) => {
@@ -48,5 +51,6 @@ app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/themes', themeRoutes);
 app.use('/api/mentions', mentionRoutes);
+app.use('/api/comments', commentRoutes);
 
 module.exports = app;
