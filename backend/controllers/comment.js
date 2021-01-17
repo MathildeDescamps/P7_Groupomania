@@ -16,6 +16,6 @@ exports.addComment = (req, res, next) => {
     Comment.create({
         ...req.body,
     })
-    .then(res.status(201).json("Commentaire ajouté!"))
+    .then(obj => res.status(201).json(obj))
     .catch(error => res.status(400).json({ error }));
 };

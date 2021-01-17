@@ -91,10 +91,18 @@ const Comments = ({postId}) => {
 
     const [commentsList, setCommentsList] = useState([]);
     const [commentContent, setCommentContent] = useState("");
+    const [userList, setUserList] = useState(null);
+
+    const getUsers = async () => {
+        const response = await axios.get(UrlAPI + '/users')
+        .then(result => result.data)
+        .then(data => setUserList(data))
+    }
 
     let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
     useEffect ( () => {
+        if (!userList) getUsers();
         axios.get(UrlAPI + '/comments/' + postId)
         .then(res => setCommentsList(res.data))
         .catch(err => console.log(err));
@@ -107,10 +115,10 @@ const Comments = ({postId}) => {
     const handleComment = () => {
         axios({
                 method: 'post',
-                url: UrlAPI + '/mentions/' + postId,
+                url: UrlAPI + '/comments/' + postId,
                 data: {user: currentUser.id, post: postId, content: commentContent}
             })
-            .then(console.log("commentaire ajouté !"))
+            .then(res => setCommentsList([res.data, ...commentsList]))
             .catch(err => console.log(err));
         setCommentContent("");
         return;
@@ -122,16 +130,27 @@ const Comments = ({postId}) => {
                 <textarea className={classes.writeCommentText} value={commentContent} onChange={setCommentText} type="text" placeholder="Rédigez un commentaire..."/>
                 <Button onClick={handleComment} className={classes.commentButton} ><span className={classes.firstLetter}>C</span>ommenter</Button>
             </div>
-            {commentsList && commentsList.map( comment => {
+            {userList && commentsList && commentsList.map( (comment) => {
                 return (
                     <div key={comment.id} className={classes.comments}>
-                        <Link className={classes.commentHeader}>
-                            <Avatar className={classes.avatar} />
-                            <p className={classes.headerText}>Prénom Nom</p>
-                        </Link>
-                        <div className={classes.commentContent}>
-                            <p className={classes.commentText}>{comment && comment.content}</p>
-                        </div>
+                        {userList.filter(author => (comment.user == author.id)).map(author => {
+                        //let buff = author.profilePic.data;
+                        //let src = Buffer.from(buff).toString();
+                        return (
+                        <React.Fragment key={comment.id} >
+                            <Link className={classes.commentHeader}>
+                                <Avatar className={classes.avatar} >
+                                    {/* <img id="image" src={src} style={{ width: '40px', height: '40px'}} /> */}
+                                </Avatar>
+                                <p className={classes.headerText}>
+                                        {author.firstname + " " + author.lastname}
+                                </p>
+                            </Link>
+                            <div className={classes.commentContent}>
+                                <p className={classes.commentText}>{comment.content}</p>
+                            </div>
+                        </React.Fragment>
+                        ); }) }
                     </div>
                 )
             })}

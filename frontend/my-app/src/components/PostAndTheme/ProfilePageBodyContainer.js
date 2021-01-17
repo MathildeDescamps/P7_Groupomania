@@ -187,8 +187,8 @@ const ProfilePageBodyContainer = () => {
             <CssBaseline />
             <div className= { classes.profileContainer }> 
                 <Avatar className= { classes.avatar } >
-                    <Person style={{fontSize: 60}} id="avatar"/>
-                    <img id="image" src={image} style={{ width: 'auto', height: 'auto'}} />
+                    <Person style={{fontSize: 60, display: 'none'}} id="avatar"/>
+                    <img id="image" src={image} style={{ display: 'block', width: 'auto', height: 'auto', minHeight: '10ch', maxWidth: '10ch'}} />
                 </Avatar>
                 <FileBase64 multiple={ false } onDone={changeImage} />
                 <h3 className= { classes.userName }> {userInfos && userInfos.firstname + ' ' + userInfos.lastname}  </h3>

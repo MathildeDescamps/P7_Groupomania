@@ -41,12 +41,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // LOGIQUE DU COMPOSANT :
-const PostBody = ({post, user}) => {
+const PostBody = ({post}) => {
 
     const classes = useStyles();
 
     //On initialise le state.
-    const [userProfile, setUserProfile] = useState();
+    const [userProfile, setUserProfile] = useState(null);
     const [image, setImage] = useState("");
 
     let buff; 
@@ -54,13 +54,12 @@ const PostBody = ({post, user}) => {
 
     //On fait une requête GET à l'API pour obtenir les infos du user concerné.
     useEffect ( () => {
-        axios.get(UrlAPI + 'users/' + user)
-        .then(res => { 
-                setUserProfile(res.data[0]);
-                buff = res.data[0].profilePic.data;
-                src = Buffer.from(buff).toString();
-                setImage(src);
-            });
+        if (post.author) {
+            setUserProfile(post.author);
+            buff = post.author.profilePic.data;
+            src = Buffer.from(buff).toString();
+            setImage(src);
+        }
     }, []);
 
 
@@ -72,7 +71,7 @@ const PostBody = ({post, user}) => {
                     <a style={{display: 'flex',}} href={userProfile &&  "/profile/" + userProfile.id}> 
                         {userProfile && userProfile.firstname + ' ' + userProfile.lastname}                
                         <Avatar className={ classes.avatar }>
-                            <img id="image" src={image} style={{ width: 'auto', height: 'auto'}} />
+                            <img id="image" src={image} style={{ width: '40px', height: '40px'}} />
                         </Avatar>
                     </a>
                 </h2>

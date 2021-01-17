@@ -1,13 +1,14 @@
-//import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import Body from './Body';
 
 
 // LOGIQUE DU COMPOSANT :
 
-const Post = ({post}) => {
+const Post = (props) => {
+
     return(
         <>
-            <Body user={post.user} post={post} />
+            <Body post={props.post} />
         </>
     );
 };

@@ -48,7 +48,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 // LOGIQUE DU COMPOSANT :
-const Header = () => {
+const Header = (props) => {
 
     const [userInfos, setUserInfos] = useState(null);
     const [image, setImage] = useState("");
@@ -69,11 +69,11 @@ const Header = () => {
                 <Link href='/accueil'><img src={ logo } alt='[ logo Postmania ]' className={classes.logo} id="logo" /></Link>
             </div>
             <div id="center-part" className={ classes.centerPart } >
-                <SearchBox className={classes.centerPart} />
+                <SearchBox userList={props.userList} className={classes.centerPart} />
             </div>
             <div id="right-part" className={ classes.rightPart } >
                 <Avatar id="profile-picture" className={ classes.avatar }  alt="[ votre photo de profile ]">
-                    <img id="image" src={image} style={{ width: 'auto', height: 'auto'}} />
+                    <img id="image" src={image} style={{ width: '40px', height: '40px'}} />
                 </Avatar>
                 <Link className={classes.link} href="/" >Se déconnecter</Link>
             </div>

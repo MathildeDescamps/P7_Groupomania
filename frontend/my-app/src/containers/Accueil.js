@@ -1,29 +1,31 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 import PageBodyContainer from '../components/PostAndTheme/PageBodyContainer';
-//import ThemeContainer from '../components/Theme/ThemeContainer';
+import axios from 'axios';
 
+const UrlAPI = 'http://localhost:3000/api/';
 
-class Accueil extends Component {
-  
-  constructor(props) {
-    super(props);
-    this.state = {
-      themeClicked: null,
-};
-  };
+const Accueil = () => {
+  const [userList, setUserList] = useState(null);
 
+  const getUsers = async () => {
+    const response = await axios.get(UrlAPI + 'users')
+        .then(result => result.data)
+        .then(data => setUserList(data))
+  }
 
-  render() {
+  useEffect ( () => {
+      if (!userList) getUsers();
+  }, []);
+
     return (
       <>
-        <Header />
-        <PageBodyContainer />
+        {userList && <Header userList={userList} />}
+        {userList && <PageBodyContainer userList={userList} />}
         <Footer /> 
       </>
     );
-  }
 };
 
 export default Accueil;

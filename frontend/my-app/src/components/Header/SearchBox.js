@@ -4,19 +4,10 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 
-const UrlAPI = 'http://localhost:3000/api/';
+export default function SearchBox(props) {
 
-export default function SearchBox() {
-
-  const [userList, setUserList] = useState([]);
   const [value, setValue] = useState(null);
   const history = useHistory();
-
-  useEffect ( () => {
-        axios.get(UrlAPI + 'users')
-        .then(result => result.data)
-        .then(data => setUserList(data))
-  }, []);
 
   return (
     <Autocomplete
@@ -26,7 +17,7 @@ export default function SearchBox() {
         setValue(newValue);
         if (newValue) window.location.pathname = "/profile/" + newValue.id; 
       }}
-      options={userList}
+      options={props.userList}
       clearOnEscape
       getOptionLabel={(option) => option.firstname + ' ' + option.lastname}
       style={{ width: 300, backgroundColor: 'white', outline: 'none', }}

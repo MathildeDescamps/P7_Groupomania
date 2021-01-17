@@ -85,20 +85,31 @@ const useStyles = makeStyles(() => ({
 
 // LOGIQUE :
 
-const PageBodyContainer = () => {
-    
+const PageBodyContainer = (props) => {   
     const [postList, setPostList] = useState(null);
     const [themeList, setThemeList] = useState(null);
     const [selectedThemes, setSelectedThemes] = useState([]);
-    const [userList, setUserList] = useState();
 
     const classes = useStyles();
-    
+
+    let users = props.userList;
+
+    const getUser = (userid) => {
+        return users.filter(user => (user.id == userid));
+    }
+
     //On envoi une requête GET à l'API pour récupérer un tableau 'postList' contenant des objets (1 objet / post).
     useEffect ( () => {
-        axios.get(UrlAPI + 'posts')
-        .then(result => result.data)
-        .then(data => setPostList(data));
+        if (users) {
+            axios.get(UrlAPI + 'posts')
+            .then(result => result.data)
+            .then(data => { 
+                setPostList(data.map(p => { 
+                    p.author=getUser(p.user)[0]; 
+                    return p; 
+                }));
+            });
+        }    
     }, []);
 
     //On envoi une requête GET à l'API pour récupérer un tableau 'themeList' contenant des objets (1 objet / theme).
@@ -117,8 +128,8 @@ const PageBodyContainer = () => {
             <CssBaseline />
                 <div className= { classes.postContainer }>
                     <CreatePost themes={themeList} />
-                    {postList && postList.filter(post => ((selectedThemes.includes(post.theme))||(selectedThemes.length == 0))).map(post => { 
-                        return <Post key={post.id} post={post} />;
+                    {postList && postList.filter(post => ((selectedThemes.includes(post.theme))||(selectedThemes.length == 0))).map( (post) => { 
+                        return <Post key={post.id} post={post}/>;
                     })}
             </div>
             <div className={ classes.themeContainer } >
