@@ -4,6 +4,7 @@ import { CssBaseline, Button } from '@material-ui/core';
 import Post from './Post';
 import CreatePost from './CreatePost';
 import axios from 'axios';
+import authHeader from '../AuthForm/AuthHeader';
 
 const UrlAPI = 'http://localhost:3000/api/';
 
@@ -94,6 +95,8 @@ const PageBodyContainer = (props) => {
 
     let users = props.userList;
 
+    let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
     const getUser = (userid) => {
         return users.filter(user => (user.id == userid));
     }
@@ -101,7 +104,7 @@ const PageBodyContainer = (props) => {
     //On envoi une requête GET à l'API pour récupérer un tableau 'postList' contenant des objets (1 objet / post).
     useEffect ( () => {
         if (users) {
-            axios.get(UrlAPI + 'posts')
+            axios.get(UrlAPI + currentUser.id + '/posts', { headers: authHeader() })
             .then(result => result.data)
             .then(data => { 
                 setPostList(data.map(p => { 
@@ -114,7 +117,7 @@ const PageBodyContainer = (props) => {
 
     //On envoi une requête GET à l'API pour récupérer un tableau 'themeList' contenant des objets (1 objet / theme).
     useEffect ( () => {
-        axios.get(UrlAPI + 'themes')
+        axios.get(UrlAPI + currentUser.id + '/themes', { headers: authHeader() })
         .then(result => result.data)
         .then(data => setThemeList(data))
     }, []);

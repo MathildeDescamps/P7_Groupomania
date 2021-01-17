@@ -3,8 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import ThumbDownIcon from '@material-ui/icons/ThumbDown';
+import authHeader from '../AuthForm/AuthHeader';
 
-const UrlAPI = 'http://localhost:3000/api';
+const UrlAPI = 'http://localhost:3000/api/';
 
 // STYLE :
 
@@ -48,11 +49,11 @@ const Likes = ({postId}) => {
     let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
     useEffect ( () => {
-        axios.get(UrlAPI + '/mentions/' + postId)
+        axios.get(UrlAPI + currentUser.id + '/mentions/' + postId, { headers: authHeader() })
         .then(res => { setMentions(res.data); })
         .catch(err => console.log(err));
 
-        axios.get(UrlAPI + '/mentions/mine/' + postId + '/' + currentUser.id)
+        axios.get(UrlAPI + currentUser.id + '/mentions/mine/' + postId + '/' + currentUser.id, { headers: authHeader() })
         .then(result => result.data)
         .then(data => setMyMention(data.mention) );
 
@@ -96,8 +97,9 @@ const Likes = ({postId}) => {
             updateMyMention(1);
             axios({
                 method: 'post',
-                url: UrlAPI + '/mentions/' + postId,
-                data: {user: currentUser.id, post: postId, mention: 1}
+                url: UrlAPI + currentUser.id + '/mentions/' + postId,
+                data: {user: currentUser.id, post: postId, mention: 1},
+                headers: authHeader(),
             })
             .then(result => result.data)
             .catch(err => console.log(err));
@@ -105,8 +107,9 @@ const Likes = ({postId}) => {
             updateMyMention(-1);
             axios({
                 method: 'post',
-                url: UrlAPI + '/mentions/' + postId,
-                data: {user: currentUser.id, post: postId, mention: -1}
+                url: UrlAPI + currentUser.id + '/mentions/' + postId,
+                data: {user: currentUser.id, post: postId, mention: -1},
+                headers: authHeader(),
             })
             .then(result => result.data)
             .catch(err => console.log(err));

@@ -3,8 +3,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { Button } from '@material-ui/core';
 import ImageUploader from 'react-images-upload';
+import authHeader from '../AuthForm/AuthHeader';
 
-const UrlAPI = 'http://localhost:3000/api';
+const UrlAPI = 'http://localhost:3000/api/';
 
 // STYLE :
 
@@ -121,8 +122,9 @@ const CreatePost = props => {
     const handlePublication = () => {
             axios({
                 method: 'post',
-                url: UrlAPI + '/posts',
-                data: { content : content, theme: theme, user: currentUser.id }
+                url: UrlAPI + currentUser.id + '/posts',
+                data: { content : content, theme: theme, user: currentUser.id },
+                headers: authHeader(),
             })
             .then(function (response) {
                 //On traite la suite une fois la réponse obtenue 
@@ -135,19 +137,21 @@ const CreatePost = props => {
                     });                    
                     const config = {
                         headers: {
-                            'Content-Type' : 'multipart/form-data'
+                            'Content-Type' : 'multipart/form-data',
+                            'x-access-token': currentUser.token,
                         }
                     }
-                     axios.post(UrlAPI + '/posts/' + postId + '/images', fd, config)
+                     axios.post(UrlAPI + currentUser.id + '/posts/' + postId + '/images', fd, config)
                         .then(function (response) {
                             console.log('image:', response);
+                            window.location.reload(false);
                         })
                         .catch(function (error) {
                             //On traite ici les erreurs éventuellement survenues
                             console.log(error);
                         });
                 }
-
+                else window.location.reload(false);
             })
             .catch(function (error) {
                 //On traite ici les erreurs éventuellement survenues

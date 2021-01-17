@@ -27,7 +27,11 @@ exports.getPosts = (req, res, next) => {
         return files; 
     };
     //Récupération du contenu (texte) du post:
-    Post.findAll() 
+    Post.findAll({
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        }) 
         .then(posts => {
             let allPosts = posts.map(p => {
                 p.dataValues.url = getImages(p.id);

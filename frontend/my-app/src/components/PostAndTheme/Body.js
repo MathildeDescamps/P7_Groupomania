@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
+import { Person } from '@material-ui/icons';
 import BodyContent from './BodyContent';
-import axios from 'axios';
 import Likes from './Likes';
 import Comments from './Comments';
-
-const UrlAPI = 'http://localhost:3000/api/';
+import moment from 'moment';
 
 // STYLE DU COMPOSANT :
 const useStyles = makeStyles((theme) => ({
@@ -47,7 +46,7 @@ const PostBody = ({post}) => {
 
     //On initialise le state.
     const [userProfile, setUserProfile] = useState(null);
-    const [image, setImage] = useState("");
+    const [image, setImage] = useState(null);
 
     let buff; 
     let src; 
@@ -56,9 +55,11 @@ const PostBody = ({post}) => {
     useEffect ( () => {
         if (post.author) {
             setUserProfile(post.author);
-            buff = post.author.profilePic.data;
-            src = Buffer.from(buff).toString();
-            setImage(src);
+            if (post.author.profilePic) {
+                buff = post.author.profilePic.data;
+                src = Buffer.from(buff).toString();
+                setImage(src);
+            }
         }
     }, []);
 
@@ -71,10 +72,12 @@ const PostBody = ({post}) => {
                     <a style={{display: 'flex',}} href={userProfile &&  "/profile/" + userProfile.id}> 
                         {userProfile && userProfile.firstname + ' ' + userProfile.lastname}                
                         <Avatar className={ classes.avatar }>
-                            <img id="image" src={image} style={{ width: '40px', height: '40px'}} />
+                            {!image && <Person style={{fontSize: 40}} id="avatar"/>}
+                            {image && <img id="image" src={image} style={{ width: '40px', height: '40px'}} />}
                         </Avatar>
                     </a>
                 </h2>
+                Posté le {moment(post.createdAt).format("DD/MM/YYYY HH:m")}
             </div>
             <div className={classes.body} > 
                 <BodyContent url={post.url} content={post.content} />

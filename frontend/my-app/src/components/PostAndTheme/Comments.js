@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import axios from 'axios';
 import { Avatar, Button, Link } from '@material-ui/core';
+import { Person } from '@material-ui/icons';
+import moment from 'moment';
+import authHeader from '../AuthForm/AuthHeader';
 
-const UrlAPI = 'http://localhost:3000/api';
+const UrlAPI = "http://localhost:3000/api/";
 
 // STYLE :
 
@@ -87,6 +90,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Comments = ({postId}) => {
 
+    let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
     const classes = useStyles();
 
     const [commentsList, setCommentsList] = useState([]);
@@ -94,16 +99,14 @@ const Comments = ({postId}) => {
     const [userList, setUserList] = useState(null);
 
     const getUsers = async () => {
-        const response = await axios.get(UrlAPI + '/users')
+        const response = await axios.get(UrlAPI + currentUser.id + '/users', { headers: authHeader() })
         .then(result => result.data)
         .then(data => setUserList(data))
     }
 
-    let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
-
     useEffect ( () => {
         if (!userList) getUsers();
-        axios.get(UrlAPI + '/comments/' + postId)
+        axios.get(UrlAPI + currentUser.id + '/comments/' + postId, { headers: authHeader() })
         .then(res => setCommentsList(res.data))
         .catch(err => console.log(err));
     }, []);
@@ -115,8 +118,9 @@ const Comments = ({postId}) => {
     const handleComment = () => {
         axios({
                 method: 'post',
-                url: UrlAPI + '/comments/' + postId,
-                data: {user: currentUser.id, post: postId, content: commentContent}
+                url: UrlAPI + currentUser.id + '/comments/' + postId,
+                data: {user: currentUser.id, post: postId, content: commentContent},
+                headers: authHeader(),
             })
             .then(res => setCommentsList([res.data, ...commentsList]))
             .catch(err => console.log(err));
@@ -134,18 +138,23 @@ const Comments = ({postId}) => {
                 return (
                     <div key={comment.id} className={classes.comments}>
                         {userList.filter(author => (comment.user == author.id)).map(author => {
-                        //let buff = author.profilePic.data;
-                        //let src = Buffer.from(buff).toString();
+                        let src="";
+                        if (author.profilePic) {
+                            let buff = author.profilePic.data;
+                            src = Buffer.from(buff).toString();
+                        }
                         return (
                         <React.Fragment key={comment.id} >
                             <Link className={classes.commentHeader}>
                                 <Avatar className={classes.avatar} >
-                                    {/* <img id="image" src={src} style={{ width: '40px', height: '40px'}} /> */}
+                                  {src=="" && <Person style={{fontSize: 40}} id="avatar"/>}
+                                  {src!="" && <img id="image" src={src} style={{ width: '40px', height: '40px'}} />}
                                 </Avatar>
                                 <p className={classes.headerText}>
-                                        {author.firstname + " " + author.lastname}
+                                    {author.firstname + " " + author.lastname}
                                 </p>
                             </Link>
+                            <span> ({moment(comment.createdAt).format("DD/MM/YYYY HH:m")})</span>
                             <div className={classes.commentContent}>
                                 <p className={classes.commentText}>{comment.content}</p>
                             </div>

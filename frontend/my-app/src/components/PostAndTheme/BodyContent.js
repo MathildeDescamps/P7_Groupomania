@@ -27,7 +27,7 @@ const BodyContent = ({url, content}) => {
         <div className={classes.root} >
             {content}<br/>
             {url && url.map((img,i) =>  {
-                    return <img src={img} alt={getImageAlt(img)} style={{width: '250px', marginRight: '2ch', marginTop: '2ch',}} key={i} />;
+                    return <img src={'/'+img} alt={getImageAlt(img)} style={{width: '250px', marginRight: '2ch', marginTop: '2ch',}} key={i} />;
                 })}
         </div>
     );

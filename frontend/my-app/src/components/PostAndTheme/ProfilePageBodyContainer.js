@@ -5,7 +5,8 @@ import { Person, ArrowBack } from '@material-ui/icons';
 import Post from './Post';
 import axios from 'axios';
 import FileBase64 from 'react-file-base64';
-
+import moment from 'moment';
+import authHeader from '../AuthForm/AuthHeader';
 
 const UrlAPI = 'http://localhost:3000/api/';
 
@@ -22,7 +23,6 @@ const useStyles = makeStyles(() => ({
             backgroundColor: '#F1D4D4',
             width: '20%',
             height: '100%',
-            position: 'absolute',
             position: 'fixed',
             right: '0', 
             top: '0',
@@ -37,6 +37,12 @@ const useStyles = makeStyles(() => ({
             fontWeight: '600',
             textAlign: 'center',
             padding: '1ch',
+        },
+        themeFlexBox: {
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            height: '100%',
         },
         themeButton: {
             backgroundColor: '#FFFFFE',
@@ -63,6 +69,16 @@ const useStyles = makeStyles(() => ({
             margin: '1ch',
             backgroundColor: '#D35233',
             color: 'white',
+        },
+        cancelFiltersButton: {
+            backgroundColor: '#D64F30',
+            color: 'white',
+            "&:hover": {
+                backgroundColor: '#FF5F39'
+            },
+            marginLeft: '1ch',
+            marginRight: '1ch',
+            marginTop: '1ch',
         },
         profileContainer: {
             backgroundColor: '#FFFFFF',
@@ -124,7 +140,7 @@ const useStyles = makeStyles(() => ({
 
 // LOGIQUE :
 
-const ProfilePageBodyContainer = () => {
+const ProfilePageBodyContainer = (props) => {
         
     //On initialise le state.
     const [postList, setPostList] = useState(null);
@@ -139,25 +155,38 @@ const ProfilePageBodyContainer = () => {
     let userId = url.split('profile/')[1];
     let buff; 
     let src; 
-    let currentUser = sessionStorage.getItem("currentUser");
+    let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
+    let users = props.userList;
+
+    const getUser = (userid) => {
+        return users.filter(user => (user.id == userid));
+    }
 
     //On envoi une requête GET à l'API pour récupérer un tableau 'postList' contenant des objets (1 objet / post).
     useEffect ( () => {
-        axios.get(UrlAPI + 'posts')
-        .then(result => result.data)
-        .then(data => setPostList(data));
+        if (users) {
+            axios.get(UrlAPI + currentUser.id + '/posts', { headers: authHeader() })
+            .then(result => result.data)
+            .then(data => { 
+                setPostList(data.map(p => { 
+                    p.author=getUser(p.user)[0]; 
+                    return p; 
+                }));
+            });
+        }    
     }, []);
 
     //On envoi une requête GET à l'API pour récupérer un tableau 'themeList' contenant des objets (1 objet / theme).
     useEffect ( () => {
-        axios.get(UrlAPI + 'themes')
+        axios.get(UrlAPI + currentUser.id + '/themes', { headers: authHeader() })
         .then(result => result.data)
         .then(data => setThemeList(data));
     }, []);
 
     //On récupère les infos du user cliqué et on traite la photo de profile pour pouvoir l'afficher.
     useEffect ( () => {
-        axios.get(UrlAPI + 'users/' + userId)
+        axios.get(UrlAPI + currentUser.id + '/users/' + userId, { headers: authHeader() })
             .then(res => { 
                 setUserInfos(res.data[0]);
                 buff = res.data[0].profilePic.data;
@@ -171,15 +200,15 @@ const ProfilePageBodyContainer = () => {
     const changeImage = (img) => {
         setImage(img.base64);
         console.log("img =>", img.base64);
-        axios.put(UrlAPI + 'users/' + userInfos.id + '/image', { image: img.base64 })
+        axios.put(UrlAPI + currentUser.id + '/users/' + userInfos.id + '/image', { image: img.base64 }, { headers: authHeader() })
             .then(result => {
                 console.log(result);
-                /* if (userInfos.id == currentUser.id) {
-                    sessionStorage.clear();
-                    sessionStorage.setItem("currentUser", current)
-                }  */
             })
             .catch(err => console.log(err))
+    };
+
+    const cancelFilters = () => {
+        setSelectedThemes([]);
     };
     
     return ( 
@@ -187,14 +216,16 @@ const ProfilePageBodyContainer = () => {
             <CssBaseline />
             <div className= { classes.profileContainer }> 
                 <Avatar className= { classes.avatar } >
-                    <Person style={{fontSize: 60, display: 'none'}} id="avatar"/>
-                    <img id="image" src={image} style={{ display: 'block', width: 'auto', height: 'auto', minHeight: '10ch', maxWidth: '10ch'}} />
+                    {!image && <Person style={{fontSize: 60}} id="avatar"/>}
+                    {image && <img id="image" src={image} style={{ display: 'block', width: 'auto', height: 'auto', minHeight: '10ch', maxWidth: '10ch'}} />}
                 </Avatar>
+                {userInfos && (userInfos.id == currentUser.id) && 
                 <FileBase64 multiple={ false } onDone={changeImage} />
+                }
                 <h3 className= { classes.userName }> {userInfos && userInfos.firstname + ' ' + userInfos.lastname}  </h3>
                 <p className= { classes.list } >
                     <b>{ userInfos && userInfos.status}</b><br/>
-                    <b>Date d'embauche :</b> { userInfos && userInfos.hiringDate}<br/>
+                    <b>Date d'embauche :</b> { userInfos && moment(userInfos.hiringDate).format("DD/MM/YYYY")}<br/>
                     <b>Email :</b> {userInfos && userInfos.email}<br/>
                 </p>
             </div>
@@ -211,24 +242,29 @@ const ProfilePageBodyContainer = () => {
             </div>
             <div className={ classes.themeContainer } >
                 <div className={ classes.themeContainerHeader } >THÈMES</div>
-                {themeList && themeList.map((theme) => { 
-                    return (
-                        <Button key={theme.id} 
-                            className={selectedThemes.includes(theme.id) ? classes.activeTheme : classes.themeButton}
-                            onClick={(props) => { 
-                                if (!selectedThemes.includes(theme.id)) {
-                                    setSelectedThemes([...selectedThemes, theme.id]);
-                                }
-                                else {
-                                    setSelectedThemes(selectedThemes.filter(item => { 
-                                        return item !== theme.id; 
-                                    }));
-                                }
-                            }} > 
-                            {theme && theme.name} 
-                        </Button>
-                    )
-                })}
+                    <div className={classes.themeFlexBox}>
+                        <div className={classes.themesButtons}>
+                            {themeList && themeList.map((theme) => { 
+                                return (
+                                    <Button key={theme.id} 
+                                        className={selectedThemes.includes(theme.id) ? classes.activeTheme : classes.themeButton}
+                                        onClick={() => { 
+                                            if (!selectedThemes.includes(theme.id)) {
+                                                setSelectedThemes([...selectedThemes, theme.id]);
+                                            }
+                                            else {
+                                                setSelectedThemes(selectedThemes.filter(item => { 
+                                                    return item !== theme.id; 
+                                                }));
+                                            }
+                                        }} > 
+                                        {theme && theme.name} 
+                                    </Button>
+                                )
+                            })}
+                        </div>
+                        <Button className={classes.cancelFiltersButton} onClick={cancelFilters} >Retirer tous les filtres</Button>
+                    </div>
             </div>
         </>
     );

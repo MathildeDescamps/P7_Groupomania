@@ -138,7 +138,10 @@ const AuthForm = () => {
             })
             .then(function (response) {
                 //Le backend nous renvoi un token et les infos du user connecté (que l'on stocke dans le session storage).
-                sessionStorage.setItem("currentUser", JSON.stringify(response.data.user));
+                console.log(response);
+                let user = response.data.user;
+                user.token = response.data.token;
+                sessionStorage.setItem("currentUser", JSON.stringify(user));
             })
             .catch(function (error) {
                 //On traite ici les erreurs éventuellement survenues
@@ -161,7 +164,7 @@ const AuthForm = () => {
                 //On traite ici les erreurs éventuellement survenues
                 console.log(error);
             });
-            history.push('/accueil');
+            history.push('/');
         };
 
         const handleClickShowPassword = () => {

@@ -6,14 +6,16 @@ module.exports = (req, res, next) => {
         //On utilise la fonction verify pour décoder notre token.
         const decodedToken = jwt.verify(token, 'THIS_IS_MY_RANDOM_TOKEN_SECRET_KEY_THAT_NOBODY_HAS_TO_KNOW');
         //On extrait l'ID utilisateur de notre token.
-        const userId = decodedToken.userId;
+        const userId = decodedToken.user;
+        console.log("userId=>", userId);
+        console.log("body.user=>", req.params.user);
         //On vérifie qu'il y ait un ID utilisateur dans la requête et qu'il corresponde à l'ID utilisateur du token.
-        if (req.body.userId && req.body.userId !== userId) {
+        if (req.params.user != userId) {
             throw 'User ID non valable';
         } else {
             next();
         }
     } catch (error) {
-        res.status(401).json({ message: 'Requête non authentifiée !' });
+        res.status(401).json({error: error});
     }
 };

@@ -3,9 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import logo from '../../header-logo.png';
 import SearchBox from "./SearchBox";
 import { Avatar, Link } from '@material-ui/core';
-import axios from 'axios';
-
-const UrlAPI = 'http://localhost:3000/api/';
+import { Person } from '@material-ui/icons';
 
 // STYLE DU COMPOSANT :
 const useStyles = makeStyles(() => ({
@@ -57,9 +55,11 @@ const Header = (props) => {
     let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
     
    useEffect ( () => {
-        let buff = currentUser.profilePic.data;
-        let src = Buffer.from(buff).toString();
-        setImage(src);
+        if (currentUser && currentUser.profilePic) {
+            let buff = currentUser.profilePic.data;
+            let src = Buffer.from(buff).toString();
+            setImage(src);
+        }
     }, []);
 
     return (
@@ -73,7 +73,8 @@ const Header = (props) => {
             </div>
             <div id="right-part" className={ classes.rightPart } >
                 <Avatar id="profile-picture" className={ classes.avatar }  alt="[ votre photo de profile ]">
-                    <img id="image" src={image} style={{ width: '40px', height: '40px'}} />
+                    {!image && <Person style={{fontSize: 40}} id="avatar"/>}
+                    {image && <img id="image" src={image} style={{ width: '40px', height: '40px'}} />}
                 </Avatar>
                 <Link className={classes.link} href="/" >Se déconnecter</Link>
             </div>
