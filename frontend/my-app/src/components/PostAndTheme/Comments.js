@@ -68,6 +68,7 @@ const useStyles = makeStyles((theme) => ({
     },
     avatar: {
         border: 'solid 2.5px #E3431D',
+        marginTop: '1ch',
     },
     headerText: {
         color: '#E3431D',
@@ -75,12 +76,22 @@ const useStyles = makeStyles((theme) => ({
         fontSize: '15px',
         marginLeft: '1ch',
     },
+    commentDate: {
+        textAlign: 'left',
+        fontSize: '10px',
+        marginTop: '-2ch',
+        marginLeft: '8ch',
+        marginBottom: '4ch',
+        width: '15%',
+    },
     commentContent: {
         width: '100%',
-        height: 'auto',
+        height: '2ch',
+        maxHeight: '8ch',
         textAlign: 'left',
         paddingLeft: '1ch',
-        paddingLeft: '1ch',
+        paddingRight: '1ch',
+        paddingBottom: '0ch',
         position: 'relative',
         bottom: '10px',
     },
@@ -154,7 +165,7 @@ const Comments = ({postId}) => {
                                     {author.firstname + " " + author.lastname}
                                 </p>
                             </Link>
-                            <span> ({moment(comment.createdAt).format("DD/MM/YYYY HH:m")})</span>
+                            <p className={classes.commentDate}>{moment(comment.createdAt).format("DD/MM/YYYY HH:m")}</p>
                             <div className={classes.commentContent}>
                                 <p className={classes.commentText}>{comment.content}</p>
                             </div>

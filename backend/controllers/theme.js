@@ -3,12 +3,23 @@ const Theme = require('../models/Theme');
 // CRÉER UN THÈME :
 exports.createTheme = (req, res, next) => {
     //Le front-end doit envoyer les données de la requête sous la forme 'data-form', et non 'JSON'. On doit donc parser l'objet reçu pour pouvoir l'utiliser.
-    const themeObject = req.body.theme;
-    Theme.create({
-            ...themeObject,
-        })
-        .then(() => res.status(201).json({ message: 'Thème enregistré !' }))
-        .catch(error => res.status(400).json({ error }));
+    const themeObject = {...req.body};
+    Theme.findOne({ where: { name: themeObject.name } })
+        .then(function (result) {
+        //Si le thème existe déjà, on ne le recrée pas :
+        if (result) {
+            return res.status(200).json({message: 'Ce thème existe déjà !'});
+        } else {
+            //S'il n'existe pas, on le crée :
+            Theme.create({
+                ...themeObject,
+            })
+            .then((t) => res.status(201).json({ id: t.id }))
+            .catch(error => res.status(400).json({ error }));
+        }
+        return;
+    })
+    .catch(error => res.status(400).json({ error }));
 };
 
 // RÉCUPÉRER TOUS LES THEMES :

@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme) => ({
             width: '70%',
             margin: 'auto',  
             marginTop: '4ch',
+            marginBottom: '8ch',
         },
         createPostHeader: {
             backgroundColor: '#D75030',
@@ -32,7 +33,6 @@ const useStyles = makeStyles((theme) => ({
             padding: '2ch',
             width: '100%',
             margin: 'auto',
-            marginBottom: '10ch',
         },
         createPostBodyContent: {
             backgroundColor: '#FFFFFE',
@@ -92,6 +92,14 @@ const useStyles = makeStyles((theme) => ({
                 backgroundColor: '#B85030',
             },
         },
+        errorMessages: {
+            display: 'none',
+            width: '100%',
+            marginTop: '0.5ch',
+            color: '#D7502F',
+            fontWeight: '500',
+            textAlign: 'right',
+        },
 }));
 
 // LOGIQUE :
@@ -100,6 +108,7 @@ const CreatePost = props => {
 
     const classes = useStyles();
     const [content, setContent] = useState('');
+    const [newTheme, setNewTheme] = useState('');
     const [user, setUser] = useState('');
     const [theme, setTheme] = useState('');
     const [pictures, setPictures] = useState([]);
@@ -113,6 +122,10 @@ const CreatePost = props => {
     const handleContent = (event) => {
         setContent(event.target.value);
     };
+
+    const handleNewTheme = (event) => {
+        setNewTheme(event.target.value);
+    };
     
     //Gestion d'import d'image(s) lors de la création d'un post.
     const onDrop = picture => {
@@ -120,28 +133,37 @@ const CreatePost = props => {
     };
 
     const handlePublication = () => {
-            axios({
-                method: 'post',
-                url: UrlAPI + currentUser.id + '/posts',
-                data: { content : content, theme: theme, user: currentUser.id },
-                headers: authHeader(),
-            })
-            .then(function (response) {
-                //On traite la suite une fois la réponse obtenue 
-                let postId = response.data.id;
-                if (pictures.length >0) {
-                    const fd = new FormData();
-                    let pictureList = [];
-                    pictureList = pictures.map(p => {
-                        fd.append('image', p);
-                    });                    
-                    const config = {
-                        headers: {
-                            'Content-Type' : 'multipart/form-data',
-                            'x-access-token': currentUser.token,
+            if(theme != '' && newTheme != '') {
+                let errorBlock = document.getElementById('errorMessages');
+                let errorMessage = document.getElementById('error1');
+                let errorMessage2 = document.getElementById('error2');
+                errorBlock.style.cssText='display: block;';
+                errorMessage.style.cssText='display: block;';
+                errorMessage2.style.cssText='display: none;';
+            } else if (theme != '' && newTheme == '') {
+                axios({
+                    method: 'post',
+                    url: UrlAPI + currentUser.id + '/posts',
+                    data: { content : content, theme: theme, user: currentUser.id },
+                    headers: authHeader(),
+                })
+                .then(function (response) {
+                    //On traite la suite une fois la réponse obtenue 
+                    let postId = response.data.id;
+                    if (pictures.length >0) {
+                        const fd = new FormData();
+                        let pictureList = [];
+                        pictureList = pictures.map(p => {
+                            fd.append('image', p);
+                        });                    
+                        const config = {
+                            headers: {
+                                'Content-Type' : 'multipart/form-data',
+                                'x-access-token': currentUser.token,
+                                'Authorization': 'Bearer ' + currentUser.token,
+                            }
                         }
-                    }
-                     axios.post(UrlAPI + currentUser.id + '/posts/' + postId + '/images', fd, config)
+                        axios.post(UrlAPI + currentUser.id + '/posts/' + postId + '/images', fd, config)
                         .then(function (response) {
                             console.log('image:', response);
                             window.location.reload(false);
@@ -150,13 +172,73 @@ const CreatePost = props => {
                             //On traite ici les erreurs éventuellement survenues
                             console.log(error);
                         });
-                }
-                else window.location.reload(false);
-            })
-            .catch(function (error) {
-                //On traite ici les erreurs éventuellement survenues
-                console.log(error);
-            });
+                    }
+                    else window.location.reload(false);
+                })
+                .catch(function (error) {
+                    //On traite ici les erreurs éventuellement survenues
+                    console.log(error);
+                });
+            } else if (theme == '' && newTheme != '') {
+                axios({
+                    method: 'post',
+                    url: UrlAPI + currentUser.id + '/themes',
+                    data: { user : currentUser.id, name: newTheme },
+                    headers: authHeader(),
+                })
+                .then(res => {
+                    axios({
+                        method: 'post',
+                        url: UrlAPI + currentUser.id + '/posts',
+                        data: { content : content, theme: res.data.id, user: currentUser.id },
+                        headers: authHeader(),
+                    })
+                    .then(function (response) {
+                        //On traite la suite une fois la réponse obtenue 
+                        let postId = response.data.id;
+                        if (pictures.length >0) {
+                            const fd = new FormData();
+                            let pictureList = [];
+                            pictureList = pictures.map(p => {
+                                fd.append('image', p);
+                            });                    
+                            const config = {
+                                headers: {
+                                    'Content-Type' : 'multipart/form-data',
+                                    'x-access-token': currentUser.token,
+                                    'Authorization': 'Bearer ' + currentUser.token,
+                                }
+                            }
+                            axios.post(UrlAPI + currentUser.id + '/posts/' + postId + '/images', fd, config)
+                            .then(function (response) {
+                                console.log('image:', response);
+                                window.location.reload(false);
+                            })
+                            .catch(function (error) {
+                                //On traite ici les erreurs éventuellement survenues
+                                console.log(error);
+                            });
+                        }
+                        else window.location.reload(false);
+                    })
+                    .catch(function (error) {
+                        //On traite ici les erreurs éventuellement survenues
+                        console.log(error);
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+            }
+            else {
+                let errorBlock = document.getElementById('errorMessages');
+                let errorMessage = document.getElementById('error1');
+                let errorMessage2 = document.getElementById('error2');
+                errorBlock.style.cssText='display: block;';
+                errorMessage2.style.cssText='display: block;';
+                errorMessage.style.cssText='display: none;';
+            }
+            
         };
 
     return(
@@ -188,27 +270,17 @@ const CreatePost = props => {
                         ); })}
                     </select>
                     <div className={classes.buttonsText}>OU</div>
-                    <input className={classes.createTheme} type="text" id="new-theme" placeholder="Saisissez un nouveau thème..." />
+                    <input className={classes.createTheme} type="text" onChange={handleNewTheme} value={newTheme} id="new-theme" placeholder="Créez un nouveau thème..." />
                     <Button onClick={handlePublication} className={classes.publish} >PUBLIER</Button>
                 </div>
+            </div>
+            <div id="errorMessages" className={classes.errorMessages} >
+                    <p id="error1" style={{display: 'none'}} >Veuillez ne renseigner qu'un seul thème.</p>
+                    <p id="error2" style={{display: 'none'}} >Veuillez renseigner un thème.</p>
             </div>
         </div>
     );
 
 };
-{/* <div 
-    style={{ height: "auto", width: "40ch", border: "dotted 1px black", textAlign: "center" }} 
-    onClick={() => imageUploader.current.click()  }
->
-    Cliquez ici pour ajouter des images...
-    <img ref={uploadedImage} style={{ maxHeight: "30ch", maxWidth: "40ch", border: "none" }} />
-</div>
-<input 
-    type="file" 
-    accept="image/*" 
-    multiple = "true" 
-    ref={imageUploader} 
-    style={{ display: "none" }}
-    onChange={handleImageUpload}
-/> */}
+
 export default CreatePost;

@@ -17,18 +17,35 @@ const useStyles = makeStyles((theme) => ({
 
     },
     header: {
+        display: 'flex',
         backgroundColor: '#D75030',
         color: 'white',
         width: '20%',
-        padding: '2ch',
-        textAlign: 'left',
-        "& a": {
-            color: 'white',
-            textDecoration: 'none',
-            "&:hover": {
-                textDecoration: 'underline',
-            },
+        height: '10ch',
+        paddingLeft: '2ch',
+        justifyContent: 'flex-start',
+        textDecoration: 'none',
+        "&:hover": {
+            textDecoration: 'underline',
         },
+    },
+    avatar: {
+        position: 'relative',
+        top: '1ch',
+    },
+    userName: {
+        marginLeft: '2ch',
+        fontWeight: '600',
+        fontSize: '20px',
+        color: 'white',
+        textAlign: 'left',
+    },
+    postedDate: {
+        fontSize: '12px',
+        textAlign: 'left',
+        marginLeft: '2ch',
+        position: 'relative',
+        bottom: '4ch',
     },
     body: {
         backgroundColor: '#F2D3D4',
@@ -67,17 +84,17 @@ const PostBody = ({post}) => {
     //Le composant retourne le post.
     return(
         <div className={classes.root} >
-            <div className={classes.header}>
-                <h2>
-                    <a style={{display: 'flex',}} href={userProfile &&  "/profile/" + userProfile.id}> 
-                        {userProfile && userProfile.firstname + ' ' + userProfile.lastname}                
+            <div>
+                    <a className={classes.header} href={userProfile &&  "/profile/" + userProfile.id}> 
                         <Avatar className={ classes.avatar }>
                             {!image && <Person style={{fontSize: 40}} id="avatar"/>}
                             {image && <img id="image" src={image} style={{ width: '40px', height: '40px'}} />}
                         </Avatar>
+                        <div>
+                            <p className={classes.userName}>{userProfile && userProfile.firstname + ' ' + userProfile.lastname}</p>     
+                            <p className={classes.postedDate} >Posté le {moment(post.createdAt).format("DD/MM/YYYY")} à {moment(post.createdAt).format("HH:m")}</p>   
+                        </div>        
                     </a>
-                </h2>
-                Posté le {moment(post.createdAt).format("DD/MM/YYYY HH:m")}
             </div>
             <div className={classes.body} > 
                 <BodyContent url={post.url} content={post.content} />

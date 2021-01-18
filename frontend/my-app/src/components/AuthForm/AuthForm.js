@@ -138,7 +138,6 @@ const AuthForm = () => {
             })
             .then(function (response) {
                 //Le backend nous renvoi un token et les infos du user connecté (que l'on stocke dans le session storage).
-                console.log(response);
                 let user = response.data.user;
                 user.token = response.data.token;
                 sessionStorage.setItem("currentUser", JSON.stringify(user));

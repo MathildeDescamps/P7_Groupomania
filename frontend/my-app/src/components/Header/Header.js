@@ -62,6 +62,10 @@ const Header = (props) => {
         }
     }, []);
 
+    const handleLogout = () => {
+        sessionStorage.removeItem("currentUser");
+    };
+
     return (
     <>
         <div id="header-container" className={ classes.root } >
@@ -76,7 +80,7 @@ const Header = (props) => {
                     {!image && <Person style={{fontSize: 40}} id="avatar"/>}
                     {image && <img id="image" src={image} style={{ width: '40px', height: '40px'}} />}
                 </Avatar>
-                <Link className={classes.link} href="/" >Se déconnecter</Link>
+                <Link className={classes.link} href="/" onClick={handleLogout} >Se déconnecter</Link>
             </div>
         </div>
     </>
