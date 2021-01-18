@@ -8,12 +8,11 @@ import axios from 'axios';
 const UrlAPI = 'http://localhost:3000/api/';
 
 const Accueil = () => {
-let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
   const [userList, setUserList] = useState(null);
 
   const getUsers = async () => {
-    console.log("currenUser.id => ", currentUser.id);
+    let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
     const response = await axios.get(UrlAPI + currentUser.id + '/users', { headers: authHeader() })
         .then(result => result.data)
         .then(data => setUserList(data))
