@@ -13,7 +13,6 @@ exports.createPost = (req, res, next) => {
 };
 
 // RÉCUPÉRER TOUS LES POSTS :
-
 exports.getPosts = (req, res, next) => {
     //Récupération des images du post s'il y en a:
     const getImages = (postId) => {

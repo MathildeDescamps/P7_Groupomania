@@ -7,7 +7,6 @@ const User = require('../models/User');
 
 
 exports.signup = (req, res, next) => {
-    console.log(JSON.stringify(req.body));
     //On appelle la fonction de hachage de bcrypt et on lui dit de saler le mot de passe 10 fois. Elle nous renvoie une promesse avec le hash généré.
     bcrypt.hash(req.body.password, 10)
         .then(hash => {

@@ -20,32 +20,36 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         backgroundColor: '#D75030',
         color: 'white',
-        width: '20%',
+        width: '26%',
         height: '10ch',
         paddingLeft: '2ch',
         justifyContent: 'flex-start',
+        alignItems: 'center',
         textDecoration: 'none',
         "&:hover": {
             textDecoration: 'underline',
         },
     },
     avatar: {
-        position: 'relative',
-        top: '1ch',
+        border: '3px solid #445760',
+        width: '5ch',
+        height: '5ch',
+        marginRight: '1ch',
     },
     userName: {
-        marginLeft: '2ch',
         fontWeight: '600',
-        fontSize: '20px',
+        fontSize: '24px',
         color: 'white',
         textAlign: 'left',
+        width: '100%',
+        marginTop: '2.5ch',
     },
     postedDate: {
         fontSize: '12px',
         textAlign: 'left',
-        marginLeft: '2ch',
         position: 'relative',
         bottom: '4ch',
+        width: '100%',
     },
     body: {
         backgroundColor: '#F2D3D4',
@@ -87,8 +91,8 @@ const PostBody = ({post}) => {
             <div>
                     <a className={classes.header} href={userProfile &&  "/profile/" + userProfile.id}> 
                         <Avatar className={ classes.avatar }>
-                            {!image && <Person style={{fontSize: 40}} id="avatar"/>}
-                            {image && <img id="image" src={image} style={{ width: '40px', height: '40px'}} />}
+                            {!image && <Person style={{fontSize: 40, padding: '2px'}} id="avatar"/>}
+                            {image && <img id="image" src={image} style={{ width: '60px', height: '60px'}} />}
                         </Avatar>
                         <div>
                             <p className={classes.userName}>{userProfile && userProfile.firstname + ' ' + userProfile.lastname}</p>     

@@ -21,9 +21,9 @@ const useStyles = makeStyles((theme) => ({
         createPostHeader: {
             backgroundColor: '#D75030',
             color: 'white',
-            width: '25%',
-            padding: '1ch',
-            textAlign: 'left',
+            width: '20%',
+            padding: '0.5ch',
+            textAlign: 'center',
             fontSize: '12px',
         },
         createPostBody: {

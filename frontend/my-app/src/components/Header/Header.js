@@ -36,6 +36,9 @@ const useStyles = makeStyles(() => ({
     },
     avatar: {
         cursor: 'pointer',
+        width: '5ch',
+        height: '5ch',
+        border: 'solid 3px #445760',
     },
     link: {
         color: '#0E0C0C',
@@ -78,7 +81,7 @@ const Header = (props) => {
             <div id="right-part" className={ classes.rightPart } >
                 <Avatar id="profile-picture" className={ classes.avatar }  alt="[ votre photo de profile ]">
                     {!image && <Person style={{fontSize: 40}} id="avatar"/>}
-                    {image && <img id="image" src={image} style={{ width: '40px', height: '40px'}} />}
+                    {image && <img id="image" src={image} style={{ width: '60px', height: '60px'}} />}
                 </Avatar>
                 <Link className={classes.link} href="/" onClick={handleLogout} >Se déconnecter</Link>
             </div>

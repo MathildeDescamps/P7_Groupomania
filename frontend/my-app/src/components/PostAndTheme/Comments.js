@@ -11,39 +11,19 @@ const UrlAPI = "http://localhost:3000/api/";
 // STYLE :
 
 const useStyles = makeStyles((theme) => ({
-    commentSection: {
+    root: {
         display: 'flex',
         flexDirection: 'column',
         width: '100%',
-        backgroundColor: '#F4F4F4',
+        backgroundColor: '#E9E9E9',
         marginTop: '1ch',
-        padding: '1ch',
     },
-    writeComment: {
+    input: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
     },
-    commentButton: {
-        backgroundColor: '#555555',
-        color: 'white',
-        textTransform: 'lowercase',
-        height: '4.5ch',
-        width: '10%',
-
-    },
-    seeMoreButton: {
-        backgroundColor: '#555555',
-        color: 'white',
-        textTransform: 'lowercase',
-        height: '4ch',
-        alignSelf: 'flex-end',
-        marginTop: '1ch',
-    },
-    firstLetter: {
-        textTransform: 'capitalize',
-    },
-    writeCommentText: {
+    inputText: {
         width: '90%',
         height: '4.5ch',
         marginRight: '1ch',
@@ -53,38 +33,47 @@ const useStyles = makeStyles((theme) => ({
         fontWeight: '500',
         fontFamily: 'Avenir, Segoe, UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif',
     },
+    button: {
+        backgroundColor: '#555555',
+        color: 'white',
+        textTransform: 'lowercase',
+        height: '4.5ch',
+        width: '10%',
+
+    },
+    firstLetter: {
+        textTransform: 'capitalize',
+    },
     comments: {
         backgroundColor: 'white',
         width: '100%',
         marginTop: '1ch',
         padding: '1ch',
     },
-    commentHeader: {
+    header: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'flex-start',
-        width: '100%',
+        width: '20%',
         height: '6ch',
+        border: 'solid 1px black',
     },
+    headerPic: {},
     avatar: {
-        border: 'solid 2.5px #E3431D',
-        marginTop: '1ch',
+        border: 'solid 3px #E3431D',
     },
     headerText: {
+        height: '',
+    },
+    headerName: {
         color: '#E3431D',
-        fontWeight: '500',
-        fontSize: '15px',
-        marginLeft: '1ch',
+        fontWeight: '600',
+        fontSize: '17px',
     },
-    commentDate: {
-        textAlign: 'left',
+    headerDate: {
         fontSize: '10px',
-        marginTop: '-2ch',
-        marginLeft: '8ch',
-        marginBottom: '4ch',
-        width: '15%',
     },
-    commentContent: {
+    content: {
         width: '100%',
         height: '2ch',
         maxHeight: '8ch',
@@ -94,6 +83,14 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: '0ch',
         position: 'relative',
         bottom: '10px',
+    },
+    seeMoreButton: {
+        backgroundColor: '#555555',
+        color: 'white',
+        textTransform: 'lowercase',
+        height: '4ch',
+        alignSelf: 'flex-end',
+        marginTop: '1ch',
     },
 }));
 
@@ -140,10 +137,10 @@ const Comments = ({postId}) => {
     };
 
     return(
-        <div className={classes.commentSection}>
-            <div className={classes.writeComment}>
-                <textarea className={classes.writeCommentText} value={commentContent} onChange={setCommentText} type="text" placeholder="Rédigez un commentaire..."/>
-                <Button onClick={handleComment} className={classes.commentButton} ><span className={classes.firstLetter}>C</span>ommenter</Button>
+        <div className={classes.root}>
+            <div className={classes.input}>
+                <textarea className={classes.inputText} value={commentContent} onChange={setCommentText} type="text" placeholder="Rédigez un commentaire..."/>
+                <Button onClick={handleComment} className={classes.button} ><span className={classes.firstLetter}>C</span>ommenter</Button>
             </div>
             {userList && commentsList && commentsList.map( (comment) => {
                 return (
@@ -156,18 +153,20 @@ const Comments = ({postId}) => {
                         }
                         return (
                         <React.Fragment key={comment.id} >
-                            <Link className={classes.commentHeader}>
-                                <Avatar className={classes.avatar} >
-                                  {src=="" && <Person style={{fontSize: 40}} id="avatar"/>}
-                                  {src!="" && <img id="image" src={src} style={{ width: '40px', height: '40px'}} />}
-                                </Avatar>
-                                <p className={classes.headerText}>
-                                    {author.firstname + " " + author.lastname}
-                                </p>
+                            <Link className={classes.header}>
+                                <div className={classes.headerPic} >
+                                    <Avatar className={classes.avatar} >
+                                        {src=="" && <Person style={{fontSize: 40}} id="avatar"/>}
+                                        {src!="" && <img id="image" src={src} style={{ width: '40px', height: '40px'}} />}
+                                    </Avatar>
+                                </div>
+                                <div className={classes.headerText} >
+                                    <p className={classes.headerName}>{author.firstname + " " + author.lastname}</p>
+                                    <p className={classes.headerDate}>Posté le {moment(comment.createdAt).format("DD/MM/YYYY")} à {moment(comment.createdAt).format("HH:m")} </p>
+                                </div>
                             </Link>
-                            <p className={classes.commentDate}>{moment(comment.createdAt).format("DD/MM/YYYY HH:m")}</p>
-                            <div className={classes.commentContent}>
-                                <p className={classes.commentText}>{comment.content}</p>
+                            <div className={classes.content}>
+                                <p className={classes.contentText}>{comment.content}</p>
                             </div>
                         </React.Fragment>
                         ); }) }
