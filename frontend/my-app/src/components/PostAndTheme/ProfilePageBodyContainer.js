@@ -219,7 +219,7 @@ const ProfilePageBodyContainer = (props) => {
                     {!image && <Person style={{fontSize: 60}} id="avatar"/>}
                     {image && <img id="image" src={image} style={{ display: 'block', width: 'auto', height: 'auto', minHeight: '10ch', maxWidth: '10ch'}} />}
                 </Avatar>
-                {userInfos && (userInfos.id == currentUser.id) && 
+                {userInfos && ((userInfos.id == currentUser.id) || (currentUser.rights == 'admin') ) && 
                 <FileBase64 multiple={ false } onDone={changeImage} />
                 }
                 <h3 className= { classes.userName }> {userInfos && userInfos.firstname + ' ' + userInfos.lastname}  </h3>

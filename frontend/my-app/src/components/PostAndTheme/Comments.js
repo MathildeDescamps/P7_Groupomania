@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme) => ({
         width: '100%',
         backgroundColor: '#E9E9E9',
         marginTop: '1ch',
+        padding: '1ch',
     },
     input: {
         display: 'flex',
@@ -105,6 +106,9 @@ const Comments = ({postId}) => {
     const [commentsList, setCommentsList] = useState([]);
     const [commentContent, setCommentContent] = useState("");
     const [userList, setUserList] = useState(null);
+    const [moreComments, setMoreComments] = useState(false);
+
+    let buttonText = moreComments ? 'Masquer les commentaires' : 'Voir plus de commentaires';
 
     const getUsers = async () => {
         const response = await axios.get(UrlAPI + currentUser.id + '/users', { headers: authHeader() })
@@ -142,38 +146,71 @@ const Comments = ({postId}) => {
                 <textarea className={classes.inputText} value={commentContent} onChange={setCommentText} type="text" placeholder="Rédigez un commentaire..."/>
                 <Button onClick={handleComment} className={classes.button} ><span className={classes.firstLetter}>C</span>ommenter</Button>
             </div>
-            {userList && commentsList && commentsList.map( (comment) => {
-                return (
-                    <div key={comment.id} className={classes.comments}>
-                        {userList.filter(author => (comment.user == author.id)).map(author => {
-                        let src="";
-                        if (author.profilePic) {
-                            let buff = author.profilePic.data;
-                            src = Buffer.from(buff).toString();
-                        }
-                        return (
-                        <React.Fragment key={comment.id} >
-                            <Link className={classes.header}>
-                                <div className={classes.headerPic} >
-                                    <Avatar className={classes.avatar} >
-                                        {src=="" && <Person style={{fontSize: 40}} id="avatar"/>}
-                                        {src!="" && <img id="image" src={src} style={{ width: '40px', height: '40px'}} />}
-                                    </Avatar>
+            {userList && commentsList && commentsList.map( (comment,i ) => {
+                if ((i < 1 && moreComments == false) || (moreComments == true)) {
+                    return (
+                        <div key={comment.id} className={classes.comments}>
+                            {userList.filter(author => (comment.user == author.id)).map(author => {
+                            let src="";
+                            if (author.profilePic) {
+                                let buff = author.profilePic.data;
+                                src = Buffer.from(buff).toString();
+                            }
+                            return (
+                            <React.Fragment key={comment.id} >
+                                <Link className={classes.header}>
+                                    <div className={classes.headerPic} >
+                                        <Avatar className={classes.avatar} >
+                                            {src=="" && <Person style={{fontSize: 40}} id="avatar"/>}
+                                            {src!="" && <img id="image" src={src} style={{ width: '40px', height: '40px'}} />}
+                                        </Avatar>
+                                    </div>
+                                    <div className={classes.headerText} >
+                                        <p className={classes.headerName}>{author.firstname + " " + author.lastname}</p>
+                                        <p className={classes.headerDate}>Posté le {moment(comment.createdAt).format("DD/MM/YYYY")} à {moment(comment.createdAt).format("HH:m")} </p>
+                                    </div>
+                                </Link>
+                                <div className={classes.content}>
+                                    <p className={classes.contentText}>{comment.content}</p>
                                 </div>
-                                <div className={classes.headerText} >
-                                    <p className={classes.headerName}>{author.firstname + " " + author.lastname}</p>
-                                    <p className={classes.headerDate}>Posté le {moment(comment.createdAt).format("DD/MM/YYYY")} à {moment(comment.createdAt).format("HH:m")} </p>
+                            </React.Fragment>
+                            ); }) }
+                        </div>
+                    )
+                }
+                else if (moreComments == true) {
+                    return (
+                        <div key={comment.id} className={classes.comments}>
+                            {userList.filter(author => (comment.user == author.id)).map(author => {
+                            let src="";
+                            if (author.profilePic) {
+                                let buff = author.profilePic.data;
+                                src = Buffer.from(buff).toString();
+                            }
+                            return (
+                            <React.Fragment key={comment.id} >
+                                <Link className={classes.header}>
+                                    <div className={classes.headerPic} >
+                                        <Avatar className={classes.avatar} >
+                                            {src=="" && <Person style={{fontSize: 40}} id="avatar"/>}
+                                            {src!="" && <img id="image" src={src} style={{ width: '40px', height: '40px'}} />}
+                                        </Avatar>
+                                    </div>
+                                    <div className={classes.headerText} >
+                                        <p className={classes.headerName}>{author.firstname + " " + author.lastname}</p>
+                                        <p className={classes.headerDate}>Posté le {moment(comment.createdAt).format("DD/MM/YYYY")} à {moment(comment.createdAt).format("HH:m")} </p>
+                                    </div>
+                                </Link>
+                                <div className={classes.content}>
+                                    <p className={classes.contentText}>{comment.content}</p>
                                 </div>
-                            </Link>
-                            <div className={classes.content}>
-                                <p className={classes.contentText}>{comment.content}</p>
-                            </div>
-                        </React.Fragment>
-                        ); }) }
-                    </div>
-                )
+                            </React.Fragment>
+                            ); }) }
+                        </div>
+                    )
+                } else return;
             })}
-            <Button className={classes.seeMoreButton}><span className={classes.firstLetter}>V</span>oir plus de commentaires</Button>
+            <Button className={classes.seeMoreButton} onClick={() => setMoreComments(!moreComments)}>{buttonText}</Button>
         </div>
     )
 };

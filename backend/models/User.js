@@ -7,13 +7,14 @@ const sequelize = new Sequelize("groupomania", "root", "pass", { dialect: "mysql
 //On crée le modèle utilisateurs.
 class User extends Model {}
 User.init({
+    rights: DataTypes.STRING,
     firstname: DataTypes.STRING,
     lastname: DataTypes.STRING,
     email: DataTypes.STRING,
     status: DataTypes.STRING,
     hiringDate: DataTypes.DATE,
     profilePic: DataTypes.BLOB('long'),
-    password: DataTypes.STRING
+    password: DataTypes.STRING,
 }, { sequelize, modelName: 't_users' });
 
 

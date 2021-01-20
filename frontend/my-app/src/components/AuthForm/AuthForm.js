@@ -115,7 +115,12 @@ const AuthForm = () => {
     const [lastname, setLastname] = useState("");
     const [status, setStatus] = useState("");
     const [hiringDate, setHiringDate] = useState("");
-    let isValid;
+    let emailIsValid;
+    let passwordIsValid;
+    let firstnameIsValid;
+    let lastnameIsValid;
+    let statusIsValid;
+    let formIsValid = 0;
 
     const showSignup = () => { 
         document.getElementById('loginError').style.display="none";
@@ -135,10 +140,43 @@ const AuthForm = () => {
         signedUpMessage.style.cssText='display: block; width: 35%; margin: auto; position: relative; top: 30px; color: green; background-color: #D5EDD1; border: green 1px solid; border-radius: 5px; padding: 5px 0px 5px 0px;';
     };
 
-    const displayErrorMessage = () => {
-        let emailRegex = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/;
-        isValid = emailRegex.test(email);
-        return isValid;
+    const emailValidation = () => {
+        let emailRegEx = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/;
+        emailIsValid = emailRegEx.test(email);
+        if (emailIsValid == false) {
+            document.getElementById('emailError').style.display="block";
+        } else formIsValid++;
+        return;
+    };
+
+    const textValidation = () => {
+        let textRegEx = /^[A-Za-z\-_\s]+$/;
+        let passwordRegEx = /^[\w]+$/;
+        passwordIsValid = passwordRegEx.test(password);
+        firstnameIsValid = textRegEx.test(firstname);
+        lastnameIsValid = textRegEx.test(lastname);
+        statusIsValid = textRegEx.test(status);
+        if (passwordIsValid == false) { 
+            document.getElementById('passwordError').style.display="block"; 
+        } else { 
+            formIsValid++ 
+        };
+        if (firstnameIsValid == false) { 
+            document.getElementById('firstnameError').style.display="block"; 
+        } else { 
+            formIsValid++ 
+        };
+        if (lastnameIsValid == false) { 
+            document.getElementById('lastnameError').style.display="block"; 
+        } else { 
+            formIsValid++ 
+        };
+        if (statusIsValid == false) { 
+            document.getElementById('statusError').style.display="block"; 
+        } else { 
+            formIsValid++ 
+        };
+        return;
     };
 
     const handleLoginSubmit = (e) => {
@@ -163,12 +201,11 @@ const AuthForm = () => {
         });
     };
     const handleSignupSubmit = async (e) => {
-        displayErrorMessage();
-        if (isValid == false) {
-            console.log('oops');
-            return;
-        } else if (isValid == true) {
+        emailValidation();
+        textValidation();
+        /* if (formIsValid == 5) {
             console.log('yayy');
+            return; */
             //On envoi à l'API une requête POST contenant les infos du nouveau user pour qu'il soit ajouté en base.
             await axios({
                 method: 'post',
@@ -178,21 +215,18 @@ const AuthForm = () => {
             //Si l'inscription se passe bien, le user est renvoyée sur la page de login avec un message de succès et doit se connecter.
             .then(response => {
                 console.log(response);
-                let signupError = document.getElementById('loginError');
-                signupError.style.cssText='display: none;';
+                document.getElementById('loginError').style.display="none";
                 setPassword("");
                 showLogin();
                 displaySuccessMessage();
             })
             //Si non, un message d'erreur s'affiche et il n'est pas redirigé vers la page de login.
             .catch(error => {
-                e.preventDefault();
                 console.log(error);
                 document.getElementById("logo").style.marginTop="7ch";
-                let signupError = document.getElementById('loginError');
-                signupError.style.cssText='display: block; width: 35%; margin: auto; position: relative; top: 30px; color: red; background-color: #E7E3E3; border: red 1px solid; border-radius: 5px; padding: 5px 0px 5px 0px';
+                document.getElementById('loginError').style.display="block";
             });
-        };
+        /* } else {console.log('form invalid...')}; */
     }
 
     const handleClickShowPassword = () => {
@@ -206,7 +240,7 @@ const AuthForm = () => {
     return (
             <div id="form-container">
                 <p id="sign-up-ok" style={{display: 'none'}}>Félicitations, vous êtes inscrit ! Connectez-vous pour accéder à Postmania.</p>
-                <p id="loginError" style={{display: 'none'}} >La connexion a échouée, veuillez réessayer.</p>
+                <p id="loginError" style={{display: 'none', width: '35%', margin: 'auto', position: 'relative', top: '30px', color: '#FF0000', backgroundColor: '#FFC1C1', border: '#FF0000 1px solid', borderRadius: '5px', padding: '5px 0px 5px 0px' }} >La connexion a échouée, veuillez réessayer.</p>
                 <p id="signupError" style={{display: 'none'}} >L'inscription a échouée, veuillez réessayer.</p>
                 <img src={ logo } alt='[ logo Postmania ]' className={classes.logo} id="logo" />
                 <form id="login-form" className={classes.loginRoot} noValidate autoComplete="off">
@@ -240,7 +274,7 @@ const AuthForm = () => {
                             </InputAdornment>
                         } 
                         onChange={(e) => setEmail(e.target.value)} />
-                        <p id="emailError" style={{display: 'none', color: 'red', fontSize: '14px'}}>Veuillez saisir une adresse mail valide.</p>
+                        <p id="emailError" style={{display: 'none', color: 'red', fontSize: '12px'}}>Veuillez saisir une adresse mail valide.</p>
                     </FormControl>
                     <FormControl className={clsx(classes.margin, classes.formField)}>
                         <InputLabel className={classes.label} htmlFor="standard-adornment-password">Mot de passe</InputLabel>
@@ -251,29 +285,34 @@ const AuthForm = () => {
                                 </IconButton>
                             </InputAdornment>
                         } onChange={(e) => setPassword(e.target.value)}/>
+                        <p id="passwordError" style={{display: 'none', color: 'red', fontSize: '12px'}}>Mot de passe invalide ( chiffres et lettres uniquement ).</p>
                     </FormControl>
                     <FormControl className={clsx(classes.margin, classes.formField)}>
                         <InputLabel className={classes.label} htmlFor="standard-adornment-firstname">Prénom</InputLabel>
                         <Input className={classes.label} id="firstname-field" value={firstname} type="text" onChange={(e) => setFirstname(e.target.value)}/>
+                        <p id="firstnameError" style={{display: 'none', color: 'red', fontSize: '12px'}}>Saisie invalide (lettres, tirets et espaces uniquement).</p>
                     </FormControl>
                     <FormControl className={clsx(classes.margin, classes.formField)}>
                         <InputLabel className={classes.label} htmlFor="standard-adornment-lastname">Nom</InputLabel>
                         <Input className={classes.label} id="lastname-field" value={lastname} type="text" onChange={(e) => setLastname(e.target.value)}/>
+                        <p id="lastnameError" style={{display: 'none', color: 'red', fontSize: '12px'}}>Saisie invalide (lettres, tirets et espaces uniquement).</p>
                     </FormControl>
                     <FormControl className={clsx(classes.margin, classes.formField)}>
                         <InputLabel className={classes.label} htmlFor="standard-adornment-status">Statut</InputLabel>
                         <Input className={classes.label} id="status-field" value={status} type="text" onChange={(e) => setStatus(e.target.value)}/>
                         <FormHelperText className={classes.label} id="outlined-weight-helper-text">Ex : Directeur commerciale.</FormHelperText>
+                        <p id="statusError" style={{display: 'none', color: 'red', fontSize: '12px'}}>Saisie invalide (lettres, tirets et espaces uniquement).</p>
                     </FormControl>
                     <FormControl className={clsx(classes.margin, classes.formField)}>
                         <Input className={classes.label} id="hiringDate-field" value={hiringDate} type="date" onChange={(e) => setHiringDate(e.target.value)}/>
                         <FormHelperText className={classes.label} id="outlined-weight-helper-text">Date d'embauche</FormHelperText>
+                        <p id="dateError" style={{display: 'none', color: 'red', fontSize: '12px'}}>Veuillez saisir une date d'embauche valide.</p>
                     </FormControl>
-                    <FormControl className={ classes.checkbox}>
+                    {/* <FormControl className={ classes.checkbox}>
                         <FormControlLabel required control={ 
                             <Checkbox name="RGPD" color="default" inputProps={{ 'aria-label': 'checkbox with default color' }} />
                             } label="En cochant cette case, je reconnais avoir pris connaissance de la charte RGPD de CAP Formation et en accepte les termes."/>
-                    </FormControl>
+                    </FormControl> */}
                     <Button size="large" className={classes.signupButton} onClick={handleSignupSubmit}>S'inscrire</Button>
                     <Link className={classes.link} href="/" onClick={showLogin} >Vous avez déjà un compte ? Se connecter.</Link>
                 </form>

@@ -29,14 +29,14 @@ exports.getPosts = (req, res, next) => {
     Post.findAll({
             order: [
                 ['createdAt', 'DESC']
-            ]
+            ],
         }) 
         .then(posts => {
             let allPosts = posts.map(p => {
                 p.dataValues.url = getImages(p.id);
                 return p;
             });
-            res.status(200).json(allPosts)
+            res.status(200).json(allPosts);
         })
         .catch(error => res.status(400).json({ error }));
 };

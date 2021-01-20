@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { CssBaseline, Button } from '@material-ui/core';
-import Post from './Post';
 import CreatePost from './CreatePost';
+import Post from './Post';
 import axios from 'axios';
 import authHeader from '../AuthForm/AuthHeader';
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const UrlAPI = 'http://localhost:3000/api/';
 
@@ -90,16 +91,18 @@ const PageBodyContainer = (props) => {
     const [postList, setPostList] = useState(null);
     const [themeList, setThemeList] = useState(null);
     const [selectedThemes, setSelectedThemes] = useState([]);
+    const [hasMore, setHasMore] = useState(true);
+    const [page, setPage] = useState(0);
 
     const classes = useStyles();
 
     let users = props.userList;
-
     let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+    let postListLength;
 
     const getUser = (userid) => {
         return users.filter(user => (user.id == userid));
-    }
+    };
 
     //On envoi une requête GET à l'API pour récupérer un tableau 'postList' contenant des objets (1 objet / post).
     useEffect ( () => {
@@ -111,8 +114,8 @@ const PageBodyContainer = (props) => {
                     p.author=getUser(p.user)[0]; 
                     return p; 
                 }));
-            });
-        }    
+            })
+        };    
     }, []);
 
     //On envoi une requête GET à l'API pour récupérer un tableau 'themeList' contenant des objets (1 objet / theme).
@@ -132,11 +135,11 @@ const PageBodyContainer = (props) => {
                 <div className= { classes.postContainer }>
                     <CreatePost themes={themeList} />
                     {postList && postList.filter(post => ((selectedThemes.includes(post.theme))||(selectedThemes.length == 0))).map( (post) => { 
-                        return <Post key={post.id} post={post}/>;
+                            return <Post key={post.id} post={post}/>;
                     })}
-            </div>
-            <div className={ classes.themeContainer } >
-                <div className={ classes.themeContainerHeader } >THÈMES</div>
+                </div>
+                <div className={ classes.themeContainer } >
+                    <div className={ classes.themeContainerHeader } >THÈMES</div>
                     <div className={classes.themeFlexBox}>
                         <div className={classes.themesButtons}>
                             {themeList && themeList.map((theme) => { 
@@ -160,7 +163,7 @@ const PageBodyContainer = (props) => {
                         </div>
                         <Button className={classes.cancelFiltersButton} onClick={cancelFilters} >Retirer tous les filtres</Button>
                     </div>
-            </div>
+                </div>
         </>
     )
 };
