@@ -29,6 +29,7 @@ const useStyles = makeStyles(() => ({
             marginTop: '10ch',      
             paddingLeft: '1ch',
             paddingRight: '1ch',
+            zIndex: '3',
         },
         themeContainerHeader: {
             backgroundColor: '#D7502F',
@@ -126,11 +127,12 @@ const useStyles = makeStyles(() => ({
         backToHome: {
             display: 'flex',
             alignItems: 'center',
-            width: '25%',
+            width: '100%',
+            backgroundColor: 'white',
             color: '#757575',
             position: 'fixed',
-            marginTop: '-80px',
-            marginLeft: '2ch',
+            marginTop: '-76px',
+            zIndex: '2',
             "&:hover": {
                 color: '#D64F30',
                 textDecoration: 'none',

@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        backgroundColor: '#D64F30',
         color: 'white',
         height: '5ch',
         width: '10%',
@@ -55,9 +54,19 @@ const Likes = ({postId}) => {
 
         axios.get(UrlAPI + currentUser.id + '/mentions/mine/' + postId + '/' + currentUser.id, { headers: authHeader() })
         .then(result => result.data)
-        .then(data => setMyMention(data.mention) );
-
+        .then(data => setMyMention(data.mention))
     }, []);
+
+    if (myMention && myMention == 1) {
+        document.getElementById('dislike'+ postId).style.backgroundColor="#A2A2A2";
+        document.getElementById('like'+ postId).style.backgroundColor="#FF5F39";
+    } else if (myMention && myMention == -1) {
+        document.getElementById('dislike'+ postId).style.backgroundColor="#FF5F39";
+        document.getElementById('like'+ postId).style.backgroundColor="#A2A2A2";
+    } else if (myMention && myMention == 0) {
+        document.getElementById('dislike'+ postId).style.backgroundColor="#A2A2A2";
+        document.getElementById('like'+ postId).style.backgroundColor="#A2A2A2";
+    }
 
     const updateMyMention = (likedislike) => {
         switch(myMention) {
@@ -116,16 +125,23 @@ const Likes = ({postId}) => {
         } else {
             return;
         }
+        if (myMention == 1) {
+            document.getElementById('like'+postId).style.backgroundColor="red";
+            document.getElementById('dislike'+postId).style.backgroundColor="#D64F30";
+        } else if (myMention == -1) {
+            document.getElementById('dislike'+postId).style.backgroundColor="red";
+            document.getElementById('like'+postId).style.backgroundColor="#D64F30";
+        }
     };
     
     return(
         <>
             <div className={classes.mentionsBlock}>
-                <div className={classes.mentionButton} name='like' onClick={handleLike}>
+                <div className={classes.mentionButton} id={'like' + postId} name='like' onClick={handleLike}>
                     <ThumbUpIcon />
                     <span className={classes.mentionNumber}>{mentions.likes}</span>
                 </div>
-                <div className={classes.mentionButton} name='dislike' onClick={handleLike}>
+                <div className={classes.mentionButton} id={'dislike' + postId} name='dislike' onClick={handleLike}>
                     <ThumbDownIcon />
                     <span className={classes.mentionNumber}>{mentions.dislikes}</span>
                 </div>

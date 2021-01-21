@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
         position: 'fixed',
         alignItems: 'center',
         backgroundColor: '#F2D3D4',
-        height: '10ch',
+        height: '80px',
         width: '100%',
         justifyContent: 'space-between',
         paddingLeft: '30px',
