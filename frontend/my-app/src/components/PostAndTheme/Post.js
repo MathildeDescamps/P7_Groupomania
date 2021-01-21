@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         backgroundColor: '#D75030',
         color: 'white',
-        width: '26%',
+        width: '30%',
         height: '10ch',
         paddingLeft: '2ch',
         justifyContent: 'flex-start',
@@ -37,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
         position: 'relative',
         top: '30px',
         zIndex: '1',
+        [theme.breakpoints.down('md')]: {
+            width: '45%',
+        },
     },
     avatar: {
         border: '3px solid #445760',
@@ -51,6 +54,11 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'left',
         width: '100%',
         marginTop: '2.5ch',
+        [theme.breakpoints.down('md')]: {
+            fontSize: '18px',
+            marginTop: '3.5ch',
+            marginBottom: '30px',
+        },
     },
     postedDate: {
         fontSize: '12px',
@@ -58,6 +66,8 @@ const useStyles = makeStyles((theme) => ({
         position: 'relative',
         bottom: '4ch',
         width: '100%',
+        [theme.breakpoints.down('md')]: {
+        },
     },
     body: {
         backgroundColor: '#F2D3D4',
@@ -82,35 +92,39 @@ const useStyles = makeStyles((theme) => ({
     deleteAlert: {
         display: 'none',
         width: '50ch',
-        height: '80px',
-        paddingTop: '15px',
-        border: '2px solid red',
+        height: 'auto',
+        paddingTop: '1ch',
+        paddingBottom: '3ch',
         borderRadius: '5px',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#E9E9E9',
         alignSelf: 'flex-end',
         verticalAlign: 'middle',
+        marginBottom: '1ch',
+    },
+    question: {
+        marginBottom: '-0.5ch',
+        fontSize: '16px',
     },
     confirmDelete: {
-        border: 'solid red 1px',
+        backgroundColor: '#D74F2F',
+        color: 'white',
         borderRadius: '5px',
-        padding: '5px 10px 5px 10px',
-        marginTop: '30px',
-        width: '20%',
-        alignSelf: 'center',
+        padding: '1ch',
         "&:hover": {
             cursor: 'pointer',
+            backgroundColor: '#FF5F39',
         },
+        marginRight: '1ch',
     },
     cancelDelete: {
-        border: 'solid red 1px',
+        backgroundColor: 'grey',
+        color: 'white',
         borderRadius: '5px',
-        padding: '5px 10px 5px 10px',
-        marginTop: '30px',
-        width: '20%',
-        alignSelf: 'center',
         "&:hover": {
             cursor: 'pointer',
+            backgroundColor: '#B4B4B4',
         },
+        padding: '1ch',
     },
 
     
@@ -175,11 +189,11 @@ const Post = ({post}) => {
                     <p className={classes.postedDate} >Posté le {moment(post.createdAt).format("DD/MM/YYYY")} à {moment(post.createdAt).format("HH:m")}</p>   
                 </div>        
             </a>
-            <p id={"deleteAlert" + post.id} className={classes.deleteAlert} >
-                Êtes-vous sûr(e) de vouloir supprimer ce post ?<br/>
-                <span id='confirmDelete' className={classes.confirmDelete} onClick={deletePost}>Oui</span>
+            <div id={"deleteAlert" + post.id} className={classes.deleteAlert}>
+                <p className={classes.question} >Êtes-vous sûr(e) de vouloir supprimer ce post ?</p><br/>
+                <span id='confirmDelete' className={classes.confirmDelete} onClick={deletePost}>Supprimer</span>
                 <span id='cancelDelete' className={classes.cancelDelete} onClick={hideMessage} >Annuler</span>
-            </p>
+            </div>
             <Close id={'deleteCross'+ post.id } className={classes.cross} onClick={confirmDeletion} />
             <div className={classes.body} >
                 <BodyContent url={post.url} content={post.content} />

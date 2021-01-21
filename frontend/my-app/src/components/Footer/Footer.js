@@ -28,8 +28,7 @@ const Footer = () => {
 
     return (
         <div id="footer-container" className={ classes.root } >
-            <Link className={classes.link} href="/mentions-legales" >mentions légales</Link>
-            <p>| © kira-factory 2020 |</p>
+            <p>© kira-factory 2020 |</p>
             <Link className={classes.link} href="mailto:contact@postmania.com" >Nous contacter</Link>
         </div>
     )

@@ -6,7 +6,7 @@ import { Avatar, Link } from '@material-ui/core';
 import { Person } from '@material-ui/icons';
 
 // STYLE DU COMPOSANT :
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
         position: 'fixed',
@@ -21,6 +21,9 @@ const useStyles = makeStyles(() => ({
     },
     logo: {
         height: '6ch',
+        [theme.breakpoints.down('md')]: {
+            height: '4ch',
+        },
     },
     leftPart: {
         display: 'flex',
@@ -29,6 +32,9 @@ const useStyles = makeStyles(() => ({
     centerPart: {
         width: '50ch',
         justifyContent: 'center',
+        [theme.breakpoints.down('md')]: {
+            width: '300px',
+        },
     },
     rightPart: {
         display: 'flex',
@@ -39,12 +45,19 @@ const useStyles = makeStyles(() => ({
         width: '5ch',
         height: '5ch',
         border: 'solid 3px #445760',
+        [theme.breakpoints.down('md')]: {
+            height: '3ch',
+            width: '3ch',
+        },
     },
     link: {
         color: '#0E0C0C',
         fontWeight: '500',
         fontSize: '20px',
         marginLeft: '15px',
+        [theme.breakpoints.down('md')]: {
+            fontSize: '16px',
+        },
     },
 }));
 

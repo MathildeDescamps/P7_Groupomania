@@ -18,8 +18,9 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
         justifyContent: 'space-between',
         color: 'white',
+        backgroundColor: '#A2A2A2',
         height: '5ch',
-        width: '10%',
+        width: '15%',
         borderRadius: '5px',
         marginRight: '1ch',
         marginTop: '1ch',
@@ -28,6 +29,10 @@ const useStyles = makeStyles((theme) => ({
         "&:hover": {
             cursor: 'pointer',
             backgroundColor: '#FF5F39',
+        },
+        [theme.breakpoints.down('md')]: {
+            width: '20%',
+            marginTop: '2ch',
         },
     },
     mentionNumber: {

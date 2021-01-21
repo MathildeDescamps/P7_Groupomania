@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
         color: '#555555',
         fontWeight: '500',
         fontFamily: 'Avenir, Segoe, UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif',
+        [theme.breakpoints.down('md')]: {
+            width: '80%',
+        },
     },
     button: {
         backgroundColor: '#555555',
@@ -40,6 +43,9 @@ const useStyles = makeStyles((theme) => ({
         textTransform: 'lowercase',
         height: '4.5ch',
         width: '10%',
+        [theme.breakpoints.down('md')]: {
+            width: '20%',
+        },
 
     },
     firstLetter: {
@@ -53,37 +59,47 @@ const useStyles = makeStyles((theme) => ({
     },
     header: {
         display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        width: '20%',
-        height: '6ch',
-        border: 'solid 1px black',
-    },
-    headerPic: {},
-    avatar: {
-        border: 'solid 3px #E3431D',
-    },
-    headerText: {
-        height: '',
-    },
-    headerName: {
+        backgroundColor: 'white',
         color: '#E3431D',
-        fontWeight: '600',
-        fontSize: '17px',
+        width: '25%',
+        height: '7ch',
+        marginTop: '0px',
+        textAlign: 'left',
+        paddingLeft: '2ch',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        textDecoration: 'none',
+        "&:hover": {
+            textDecoration: 'underline',
+        },
+        zIndex: '1',
+        [theme.breakpoints.down('md')]: {
+            width: '50%',
+            paddingLeft: '1ch',
+        },
     },
-    headerDate: {
-        fontSize: '10px',
+    avatar: {
+        border: '3px solid #445760',
+        width: '4ch',
+        height: '4ch',
+        marginRight: '1ch',
+    },
+    userName: {
+        fontWeight: '600',
+        fontSize: '18px',
+        position: 'relative',
+        top: '0.5ch',
+    },
+    postedDate: {
+        fontSize: '12px',
+        position: 'relative',
+        bottom: '2ch',
     },
     content: {
         width: '100%',
         height: '2ch',
-        maxHeight: '8ch',
         textAlign: 'left',
-        paddingLeft: '1ch',
-        paddingRight: '1ch',
-        paddingBottom: '0ch',
-        position: 'relative',
-        bottom: '10px',
+        paddingBottom: '4ch',
     },
     seeMoreButton: {
         backgroundColor: '#555555',
@@ -159,15 +175,13 @@ const Comments = ({postId}) => {
                             return (
                             <React.Fragment key={comment.id} >
                                 <Link className={classes.header}>
-                                    <div className={classes.headerPic} >
                                         <Avatar className={classes.avatar} >
-                                            {src=="" && <Person style={{fontSize: 40}} id="avatar"/>}
+                                            {src=="" && <Person style={{fontSize: 30}} id="avatar"/>}
                                             {src!="" && <img id="image" src={src} style={{ width: '40px', height: '40px'}} />}
                                         </Avatar>
-                                    </div>
-                                    <div className={classes.headerText} >
-                                        <p className={classes.headerName}>{author.firstname + " " + author.lastname}</p>
-                                        <p className={classes.headerDate}>Posté le {moment(comment.createdAt).format("DD/MM/YYYY")} à {moment(comment.createdAt).format("HH:m")} </p>
+                                    <div>
+                                        <p className={classes.userName}>{author.firstname + " " + author.lastname}</p>
+                                        <p className={classes.postedDate}>Posté le {moment(comment.createdAt).format("DD/MM/YYYY")} à {moment(comment.createdAt).format("HH:m")} </p>
                                     </div>
                                 </Link>
                                 <div className={classes.content}>

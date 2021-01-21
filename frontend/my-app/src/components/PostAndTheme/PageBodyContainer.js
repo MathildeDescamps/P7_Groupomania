@@ -5,13 +5,12 @@ import CreatePost from './CreatePost';
 import Post from './Post';
 import axios from 'axios';
 import authHeader from '../AuthForm/AuthHeader';
-import InfiniteScroll from "react-infinite-scroll-component";
 
 const UrlAPI = 'http://localhost:3000/api/';
 
 // STYLE :
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
         postContainer: {
             width: '80%',
             position: 'relative',
@@ -91,14 +90,11 @@ const PageBodyContainer = (props) => {
     const [postList, setPostList] = useState(null);
     const [themeList, setThemeList] = useState(null);
     const [selectedThemes, setSelectedThemes] = useState([]);
-    const [hasMore, setHasMore] = useState(true);
-    const [page, setPage] = useState(0);
 
     const classes = useStyles();
 
     let users = props.userList;
     let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
-    let postListLength;
 
     const getUser = (userid) => {
         return users.filter(user => (user.id == userid));

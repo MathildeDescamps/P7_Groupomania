@@ -16,6 +16,11 @@ const useStyles = makeStyles((theme) => ({
     logo: {
         height: '10ch',
         marginTop: '23ch',
+        [theme.breakpoints.down('md')]: {
+            marginTop: '45ch',
+            position: 'relative',
+            top: '200px',
+        },
     },
     loginRoot: {
         display: 'flex',
@@ -40,7 +45,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#F1D4D4',
         color: '#9C9D9C',
         width: '50ch',
-        height: '75ch',
+        height: '65ch',
         position: 'absolute',
         top: 180,
         bottom: 0,
@@ -84,9 +89,9 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#D75030',
         width: '25ch',
         color: 'white',
+        marginTop: '4ch',
         marginBottom: '2ch',
         position: 'relative',
-        top: '-8px',
         '&:hover': {
             backgroundColor: '#BF5438'
         },
@@ -96,6 +101,10 @@ const useStyles = makeStyles((theme) => ({
         textDecoration: 'none',
         '&:hover': {
             textDecoration: 'underline',
+        },
+        [theme.breakpoints.down('md')]: {
+            position: 'relative',
+            top: '40px',
         },
     },
 }));
@@ -145,38 +154,58 @@ const AuthForm = () => {
         emailIsValid = emailRegEx.test(email);
         if (emailIsValid == false) {
             document.getElementById('emailError').style.display="block";
-        } else formIsValid++;
-        return;
+            return emailIsValid;
+        } else {
+            document.getElementById('emailError').style.display="none";
+        };
     };
-
-    const textValidation = () => {
-        let textRegEx = /^[A-Za-z\-_\s]+$/;
+//let textRegEx = /^[A-Za-z\-_\s]+$/;
+    const passwordValidation = () => {
         let passwordRegEx = /^[\w]+$/;
         passwordIsValid = passwordRegEx.test(password);
-        firstnameIsValid = textRegEx.test(firstname);
-        lastnameIsValid = textRegEx.test(lastname);
-        statusIsValid = textRegEx.test(status);
         if (passwordIsValid == false) { 
             document.getElementById('passwordError').style.display="block"; 
-        } else { 
-            formIsValid++ 
+            return passwordIsValid;
+        } else {
+            document.getElementById('passwordError').style.display="none";
+            return passwordIsValid;
         };
+    };
+
+    const firstnameValidation = () => {
+        let textRegEx = /^[A-Za-z\-_\s]+$/;
+        firstnameIsValid = textRegEx.test(firstname);
         if (firstnameIsValid == false) { 
             document.getElementById('firstnameError').style.display="block"; 
-        } else { 
-            formIsValid++ 
+            return firstnameIsValid;
+        } else {
+            document.getElementById('firstnameError').style.display="none";
+            return firstnameIsValid;
         };
+    };
+
+    const lastnameValidation = () => {
+        let textRegEx = /^[A-Za-z\-_\s]+$/;
+        lastnameIsValid = textRegEx.test(lastname);
         if (lastnameIsValid == false) { 
             document.getElementById('lastnameError').style.display="block"; 
-        } else { 
-            formIsValid++ 
+            return lastnameIsValid;
+        } else {
+            document.getElementById('lastnameError').style.display="none";
+            return lastnameIsValid;
         };
+    };
+
+    const statusValidation = () => {
+        let textRegEx = /^[A-Za-z\-_\s]+$/;
+        statusIsValid = textRegEx.test(status);
         if (statusIsValid == false) { 
             document.getElementById('statusError').style.display="block"; 
-        } else { 
-            formIsValid++ 
+            return statusIsValid;
+        } else {
+            document.getElementById('statusError').style.display="none";
+            return statusIsValid;
         };
-        return;
     };
 
     const handleLoginSubmit = (e) => {
@@ -201,13 +230,9 @@ const AuthForm = () => {
         });
     };
     const handleSignupSubmit = async (e) => {
-        emailValidation();
-        textValidation();
-        /* if (formIsValid == 5) {
-            console.log('yayy');
-            return; */
-            //On envoi à l'API une requête POST contenant les infos du nouveau user pour qu'il soit ajouté en base.
-            await axios({
+        //On envoi à l'API une requête POST contenant les infos du nouveau user pour qu'il soit ajouté en base.
+        if (((emailIsValid == false) || (passwordIsValid == false) || (firstnameIsValid == false) || (lastnameIsValid == false) || (statusIsValid == false))) { 
+            axios({
                 method: 'post',
                 url: UrlAPI + '/signup',
                 data: { email : email, password: password, firstname: firstname, lastname: lastname, status: status, hiringDate: hiringDate }
@@ -225,8 +250,11 @@ const AuthForm = () => {
                 console.log(error);
                 document.getElementById("logo").style.marginTop="7ch";
                 document.getElementById('loginError').style.display="block";
+                document.getElementById('signup-form').style.height='95ch';
             });
-        /* } else {console.log('form invalid...')}; */
+        } else {
+            console.log('oops');
+        }
     }
 
     const handleClickShowPassword = () => {
@@ -268,17 +296,17 @@ const AuthForm = () => {
                 <form id="signup-form" className={classes.signupRoot} noValidate autoComplete="off">
                     <FormControl className={clsx(classes.margin, classes.formField)}>
                         <InputLabel className={classes.label} htmlFor="standard-adornment-login">Email</InputLabel>
-                        <Input className={classes.label} id="signup-email-field" value={email} type="email" endAdornment={
+                        <Input className={classes.label} id="signup-email-field" value={email} type="email" onBlur={emailValidation} endAdornment={
                             <InputAdornment position="end">
                                 <AccountCircle className={classes.icon} />
                             </InputAdornment>
                         } 
                         onChange={(e) => setEmail(e.target.value)} />
-                        <p id="emailError" style={{display: 'none', color: 'red', fontSize: '12px'}}>Veuillez saisir une adresse mail valide.</p>
+                        <p id="emailError" style={{display: 'none', color: 'red', fontSize: '12px'}} >Veuillez saisir une adresse mail valide.</p>
                     </FormControl>
                     <FormControl className={clsx(classes.margin, classes.formField)}>
                         <InputLabel className={classes.label} htmlFor="standard-adornment-password">Mot de passe</InputLabel>
-                        <Input className={classes.label} id="signup-password-field" value={password} type={showPassword ? 'text' : 'password'} endAdornment={
+                        <Input className={classes.label} id="signup-password-field" value={password} type={showPassword ? 'text' : 'password'} onBlur={passwordValidation} endAdornment={
                             <InputAdornment position="end">
                                 <IconButton aria-label="toggle password visibility" onClick={handleClickShowPassword} onMouseDown={handleMouseDownPassword}>
                                     {showPassword ? <Visibility /> : <VisibilityOff />}
@@ -289,24 +317,23 @@ const AuthForm = () => {
                     </FormControl>
                     <FormControl className={clsx(classes.margin, classes.formField)}>
                         <InputLabel className={classes.label} htmlFor="standard-adornment-firstname">Prénom</InputLabel>
-                        <Input className={classes.label} id="firstname-field" value={firstname} type="text" onChange={(e) => setFirstname(e.target.value)}/>
+                        <Input className={classes.label} id="firstname-field" value={firstname} type="text" onBlur={firstnameValidation} onChange={(e) => setFirstname(e.target.value)}/>
                         <p id="firstnameError" style={{display: 'none', color: 'red', fontSize: '12px'}}>Saisie invalide (lettres, tirets et espaces uniquement).</p>
                     </FormControl>
                     <FormControl className={clsx(classes.margin, classes.formField)}>
                         <InputLabel className={classes.label} htmlFor="standard-adornment-lastname">Nom</InputLabel>
-                        <Input className={classes.label} id="lastname-field" value={lastname} type="text" onChange={(e) => setLastname(e.target.value)}/>
+                        <Input className={classes.label} id="lastname-field" value={lastname} type="text" onBlur={lastnameValidation} onChange={(e) => setLastname(e.target.value)}/>
                         <p id="lastnameError" style={{display: 'none', color: 'red', fontSize: '12px'}}>Saisie invalide (lettres, tirets et espaces uniquement).</p>
                     </FormControl>
                     <FormControl className={clsx(classes.margin, classes.formField)}>
                         <InputLabel className={classes.label} htmlFor="standard-adornment-status">Statut</InputLabel>
-                        <Input className={classes.label} id="status-field" value={status} type="text" onChange={(e) => setStatus(e.target.value)}/>
+                        <Input className={classes.label} id="status-field" value={status} type="text" onBlur={statusValidation} onChange={(e) => setStatus(e.target.value)}/>
                         <FormHelperText className={classes.label} id="outlined-weight-helper-text">Ex : Directeur commerciale.</FormHelperText>
                         <p id="statusError" style={{display: 'none', color: 'red', fontSize: '12px'}}>Saisie invalide (lettres, tirets et espaces uniquement).</p>
                     </FormControl>
                     <FormControl className={clsx(classes.margin, classes.formField)}>
                         <Input className={classes.label} id="hiringDate-field" value={hiringDate} type="date" onChange={(e) => setHiringDate(e.target.value)}/>
                         <FormHelperText className={classes.label} id="outlined-weight-helper-text">Date d'embauche</FormHelperText>
-                        <p id="dateError" style={{display: 'none', color: 'red', fontSize: '12px'}}>Veuillez saisir une date d'embauche valide.</p>
                     </FormControl>
                     {/* <FormControl className={ classes.checkbox}>
                         <FormControlLabel required control={ 

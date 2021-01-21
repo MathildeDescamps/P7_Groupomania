@@ -10,10 +10,16 @@ const UrlAPI = 'http://localhost:3000/api/';
 const Profile = () => {
   const [userList, setUserList] = useState(null);
   let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+  if (!currentUser) {
+    window.location.pathname = "/";
+  }
   const getUsers = async () => {
     const response = await axios.get(UrlAPI + currentUser.id + '/users', { headers: authHeader() })
         .then(result => result.data)
         .then(data => setUserList(data))
+        .catch(res => { 
+          console.log(res.data);
+        });
   }
 
   useEffect ( () => {

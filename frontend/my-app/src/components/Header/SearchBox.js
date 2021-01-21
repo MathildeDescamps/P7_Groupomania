@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { useHistory } from 'react-router-dom';
 
 export default function SearchBox(props) {
 
   const [value, setValue] = useState(null);
-  const history = useHistory();
 
   return (
     <Autocomplete
