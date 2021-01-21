@@ -13,6 +13,5 @@ router.get('/:user_id', postCtrl.getPostsOfOneUser);
 router.post('/', postCtrl.createPost);
 router.post('/:id/images', multer, postCtrl.uploadImage);
 router.delete('/:id', postCtrl.deletePost);
-router.put('/:id', postCtrl.updatePost);
 
 module.exports = router;

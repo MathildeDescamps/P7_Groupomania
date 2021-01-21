@@ -60,23 +60,12 @@ exports.getPostsOfOneUser = (req, res, next) => {
         .catch(error => res.status(404).json({ error }));
 };
 
-// MODIFIER UN POST :
-exports.updatePost = (req, res, next) => {
-    const postObject = req.body.post;
-    Post.update(
-        { ...postObject },
-        { where: { id: req.params.id } }
-    )
-    .then(() => res.status(200).json({ message: 'Post modifié !' }))
-    .catch(error => res.status(400).json({ error }));
-};
-
-
 // SUPPRIMER UN POST :
 exports.deletePost = (req, res, next) => {
     Post.destroy({
             where: {
-                id: req.params.id
+                id: req.params.id,
+                user: req.params.user
             }
     })
         .then(() => res.status(200).json({ message: 'Post supprimé !' }))
