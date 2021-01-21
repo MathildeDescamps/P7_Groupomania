@@ -110,6 +110,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // LOGIQUE DU COMPOSANT :
+    let emailIsValid;
+    let passwordIsValid;
+    let firstnameIsValid;
+    let lastnameIsValid;
+    let statusIsValid;
 
 const AuthForm = () => {
 
@@ -124,12 +129,6 @@ const AuthForm = () => {
     const [lastname, setLastname] = useState("");
     const [status, setStatus] = useState("");
     const [hiringDate, setHiringDate] = useState("");
-    let emailIsValid;
-    let passwordIsValid;
-    let firstnameIsValid;
-    let lastnameIsValid;
-    let statusIsValid;
-    let formIsValid = 0;
 
     const showSignup = () => { 
         document.getElementById('loginError').style.display="none";
@@ -157,6 +156,7 @@ const AuthForm = () => {
             return emailIsValid;
         } else {
             document.getElementById('emailError').style.display="none";
+            return emailIsValid;
         };
     };
 //let textRegEx = /^[A-Za-z\-_\s]+$/;
@@ -231,7 +231,7 @@ const AuthForm = () => {
     };
     const handleSignupSubmit = async (e) => {
         //On envoi à l'API une requête POST contenant les infos du nouveau user pour qu'il soit ajouté en base.
-        if (((emailIsValid == false) || (passwordIsValid == false) || (firstnameIsValid == false) || (lastnameIsValid == false) || (statusIsValid == false))) { 
+        if (emailIsValid && passwordIsValid && firstnameIsValid && lastnameIsValid && statusIsValid) { 
             axios({
                 method: 'post',
                 url: UrlAPI + '/signup',

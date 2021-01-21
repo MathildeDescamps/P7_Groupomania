@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
             textDecoration: 'underline',
         },
         position: 'relative',
-        top: '30px',
+        //top: '30px',
         zIndex: '1',
         [theme.breakpoints.down('md')]: {
             width: '45%',
@@ -153,6 +153,7 @@ const Post = ({post}) => {
             let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
             if ((post.author.id == currentUser.id) || (currentUser.rights == "admin")) {
                 document.getElementById('deleteCross'+ post.id).style.display="block";
+                document.getElementById('header'+ post.id).style.top="30px";
             }
         }
     }, []);
@@ -179,7 +180,7 @@ const Post = ({post}) => {
     //Le composant retourne le post.
     return(
         <div className={classes.root} >
-            <a id={'header' + post.id} className={classes.header} href={userProfile &&  "/profile/" + userProfile.id}> 
+            <a id={"header" + post.id} className={classes.header} href={userProfile &&  "/profile/" + userProfile.id}> 
                 <Avatar className={ classes.avatar }>
                     {!image && <Person style={{fontSize: 40, padding: '2px'}} id="avatar"/>}
                     {image && <img id="image" src={image} style={{ width: '60px', height: '60px'}} />}
