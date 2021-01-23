@@ -61,14 +61,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
 // LOGIQUE DU COMPOSANT :
 const Header = (props) => {
 
     const [userInfos, setUserInfos] = useState(null);
     const [image, setImage] = useState("");
     const classes = useStyles();
-
-    let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
     
    useEffect ( () => {
         if (currentUser && currentUser.profilePic) {

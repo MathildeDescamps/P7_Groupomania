@@ -37,6 +37,7 @@ const mentionRoutes = require('./routes/mention');
 const commentRoutes = require('./routes/comment');
 
 app.use(express.json({limit: '50mb', extended: true}));
+
 app.use(express.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 
 //On se connecte à la base de données:

@@ -44,7 +44,7 @@ exports.login = (req, res, next) => {
             //S'il n'y a pas d'erreur, on renvoie une réponse 200 contenant l'ID utilisateur et un token.
             return res.status(200).json({
                     // On utilise la fonction sign() de jsonwebtoken pour encoder un nouveau token. Ce token contient l'ID de l'utilisateur en tant que payload.
-                    token: jwt.sign({ user: user.dataValues.id },
+                    token: jwt.sign({ user: user.dataValues.id, rights: user.dataValues.rights },
                                 'THIS_IS_MY_RANDOM_TOKEN_SECRET_KEY_THAT_NOBODY_HAS_TO_KNOW', { expiresIn: '24h' }
                             ),
                     user: user.dataValues,

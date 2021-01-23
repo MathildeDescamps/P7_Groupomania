@@ -11,6 +11,7 @@ services:
       - 3306:3306 
     volumes: 
       - /Users/mathildedescamps/www/groupomania/mysql:/var/lib/mysql
+      - /Users/mathildedescamps/www/groupomania/mysql.cnf:/etc/mysql/conf.d/mysql.cnf
     networks:
     - groupomania
   phpmyadmin:

@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useHistory } from 'react-router-dom';
 
 const UrlAPI = 'http://localhost:3000/api/';
+let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
 const Accueil = () => {
 
@@ -14,10 +15,8 @@ const Accueil = () => {
 
   const [userList, setUserList] = useState(null);
 
-  
-
-  const getUsers = async () => {
-    let currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+  const getUsers = async () => {  
+    currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
     if (!currentUser) {
     window.location.pathname = "/";
     }
@@ -37,7 +36,7 @@ const Accueil = () => {
 
     return (
       <>
-        {userList && <Header userList={userList} />}
+        {(userList && currentUser) && <Header userList={userList} />}
         {userList && <PageBodyContainer userList={userList} />}
         <Footer /> 
       </>
