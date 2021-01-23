@@ -65,13 +65,14 @@ exports.getPostsOfOneUser = (req, res, next) => {
 exports.deletePost = (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
     const decodedToken = jwt.verify(token, 'THIS_IS_MY_RANDOM_TOKEN_SECRET_KEY_THAT_NOBODY_HAS_TO_KNOW');
+    let user = decodedToken.user;
     Post.findOne({
         where: {
             id: req.params.id
         }
     })
     .then( post => {
-        if((req.params.user == post.user)||(decodedToken.rights == "admin")) {
+        if((user == post.user)||(decodedToken.rights == "admin")) {
             post.destroy({})
             .then(() => res.status(200).json({ message: 'Post supprimé !' }))
             .catch(error => res.status(400).json({ error }));
